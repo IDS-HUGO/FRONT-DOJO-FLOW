@@ -52,12 +52,12 @@ export function StudentsPage() {
 
   if (loading) {
     return (
-      <section>
+      <section className="page-shell">
         <PageHeader
           title="Gestión de Alumnos"
           subtitle="Registra y consulta el padrón activo de estudiantes de tu academia."
         />
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <div className="spinner"></div>
           <p>Cargando alumnos...</p>
         </div>
@@ -66,13 +66,13 @@ export function StudentsPage() {
   }
 
   return (
-    <section>
+    <section className="page-shell">
       <PageHeader
         title="Gestión de Alumnos"
         subtitle="Registra y consulta el padrón activo de estudiantes de tu academia."
       />
 
-      <form className="card" onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
+      <form className="card form-section surface-glass" onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
         <div className="form-row">
           <input
             placeholder="Nombre completo"
@@ -111,7 +111,7 @@ export function StudentsPage() {
       />
 
       {rows.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <p>Aún no hay alumnos registrados.</p>
         </div>
       ) : (

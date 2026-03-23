@@ -54,12 +54,12 @@ export function BeltsPage() {
 
   if (loading) {
     return (
-      <section>
+      <section className="page-shell">
         <PageHeader
           title="Grados y Exámenes"
           subtitle="Controla la progresión técnica y aprobación de cintas de tus alumnos."
         />
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <div className="spinner"></div>
           <p>Cargando evaluaciones...</p>
         </div>
@@ -68,13 +68,13 @@ export function BeltsPage() {
   }
 
   return (
-    <section>
+    <section className="page-shell">
       <PageHeader
         title="Grados y Exámenes"
         subtitle="Controla la progresión técnica y aprobación de cintas de tus alumnos."
       />
 
-      <form className="card" onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
+      <form className="card form-section surface-glass" onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
         <div className="form-row">
           <select
             name="student_id"
@@ -119,7 +119,7 @@ export function BeltsPage() {
       </form>
 
       {rows.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <p>Sin exámenes registrados por ahora.</p>
         </div>
       ) : (

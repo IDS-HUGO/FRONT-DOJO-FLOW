@@ -54,12 +54,12 @@ export function PaymentsPage() {
 
   if (loading) {
     return (
-      <section>
+      <section className="page-shell">
         <PageHeader
           title="Cobranza y Pagos"
           subtitle="Registra pagos y lleva control de métodos de cobro y flujo financiero."
         />
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <div className="spinner"></div>
           <p>Cargando pagos...</p>
         </div>
@@ -68,13 +68,13 @@ export function PaymentsPage() {
   }
 
   return (
-    <section>
+    <section className="page-shell">
       <PageHeader
         title="Cobranza y Pagos"
         subtitle="Registra pagos y lleva control de métodos de cobro y flujo financiero."
       />
 
-      <form className="card" onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
+      <form className="card form-section surface-glass" onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
         <div className="form-row">
           <select
             name="student_id"
@@ -116,7 +116,7 @@ export function PaymentsPage() {
       </form>
 
       {rows.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <p>No hay pagos registrados todavía.</p>
         </div>
       ) : (

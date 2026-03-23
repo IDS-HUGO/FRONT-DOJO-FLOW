@@ -156,6 +156,16 @@ a {
   background: #fff;
 }
 
+.table-shell {
+  position: relative;
+  overflow: hidden;
+}
+
+.table-shell .table th,
+.table-shell .table td {
+  transition: background-color 0.2s ease, transform 0.25s ease;
+}
+
 .logo-mark--sm {
   width: 44px;
   height: 44px;
@@ -291,6 +301,164 @@ a {
   color: var(--muted);
 }
 
+.page-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.hero-empty {
+  text-align: center;
+  padding: 2rem;
+  border-radius: 1.2rem;
+  color: var(--muted);
+}
+
+.executive-strip,
+.settings-rail {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1.2rem;
+  margin-bottom: 0.25rem;
+}
+
+.executive-strip strong,
+.settings-rail strong {
+  display: block;
+  font-size: 1.1rem;
+  color: var(--navy-deep);
+  margin-top: 0.2rem;
+}
+
+.executive-label {
+  display: inline-block;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.report-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.report-kpi {
+  padding: 1.25rem 1.3rem;
+  border-radius: 1.2rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.report-kpi:hover,
+.report-chart-card:hover,
+.executive-strip:hover,
+.settings-rail:hover,
+.hero-empty:hover,
+.form-section:hover,
+.table-shell:hover,
+.stat-card-shell:hover,
+.page-header:hover,
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 60px rgba(37, 35, 89, 0.14);
+}
+
+.report-kpi-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.report-kpi-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--navy-deep);
+  margin-top: 0.4rem;
+}
+
+.report-kpi-blue { border-left: 4px solid var(--navy); }
+.report-kpi-green { border-left: 4px solid #10b981; }
+.report-kpi-orange { border-left: 4px solid var(--orange); }
+.report-kpi-red { border-left: 4px solid var(--orange-deep); }
+.report-kpi-purple { border-left: 4px solid #8b5cf6; }
+.report-kpi-cyan { border-left: 4px solid #06b6d4; }
+
+.report-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.report-chart-card {
+  padding: 1.2rem 1.25rem;
+  border-radius: 1.2rem;
+  min-height: 380px;
+}
+
+.section-headline {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.section-headline h3 {
+  margin: 0;
+  color: var(--navy-deep);
+}
+
+.section-headline span {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.search-filter {
+  margin-bottom: 1rem;
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+}
+
+.search-filter-input {
+  width: min(100%, 420px);
+  padding: 0.9rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(44, 41, 115, 0.12);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--navy-deep);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.search-filter-input:focus {
+  outline: none;
+  border-color: var(--orange);
+  box-shadow: 0 0 0 4px rgba(242, 107, 29, 0.12);
+  transform: translateY(-1px);
+}
+
+.form-section {
+  padding: 1.35rem;
+  border-radius: 1.2rem;
+}
+
+.danger-button {
+  background: linear-gradient(135deg, var(--orange-deep), #b8331f) !important;
+  border-color: transparent !important;
+}
+
+.empty-inline {
+  text-align: center;
+  color: var(--muted);
+  padding: 1rem 0;
+}
+
 .stat-card-shell {
   position: relative;
   overflow: hidden;
@@ -362,6 +530,11 @@ a {
   text-align: left;
   padding: 0.7rem 0.5rem;
   border-bottom: 1px solid #f3f4f6;
+}
+
+.table-shell .table th,
+.table-shell .table td {
+  transition: background-color 0.2s ease, transform 0.25s ease;
 }
 
 .table th {
@@ -766,6 +939,12 @@ textarea,
   }
 
   .grid.cols-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .executive-strip,
+  .settings-rail,
+  .report-chart-grid {
     grid-template-columns: 1fr;
   }
 }

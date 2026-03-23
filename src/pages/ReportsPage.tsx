@@ -46,9 +46,9 @@ export function ReportsPage() {
 
   if (loading) {
     return (
-      <div className="page">
+      <div className="page page-shell">
         <PageHeader title="Reportes y Análisis" subtitle="Análisis detallado del rendimiento de tu academia" />
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <div className="spinner"></div>
           <p>Cargando reportes...</p>
         </div>
@@ -58,9 +58,9 @@ export function ReportsPage() {
 
   if (!summary) {
     return (
-      <div className="page">
+      <div className="page page-shell">
         <PageHeader title="Reportes y Análisis" subtitle="Análisis detallado del rendimiento de tu academia" />
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <p>Sin datos disponibles</p>
         </div>
       </div>
@@ -68,59 +68,77 @@ export function ReportsPage() {
   }
 
   return (
-    <div className="page">
+    <div className="page page-shell">
       <PageHeader title="Reportes y Análisis" subtitle="Análisis detallado del rendimiento de tu academia" />
 
+      <div className="executive-strip surface-glass">
+        <div>
+          <span className="executive-label">Revenue</span>
+          <strong>${summary.total_revenue.toLocaleString()}</strong>
+        </div>
+        <div>
+          <span className="executive-label">Asistencia</span>
+          <strong>{summary.attendance_rate.toFixed(1)}%</strong>
+        </div>
+        <div>
+          <span className="executive-label">Cobranza</span>
+          <strong>{summary.pending_payments} pendientes</strong>
+        </div>
+      </div>
+
       {/* KPI Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
-        <div style={{ background: '#f3f4f6', padding: '1.5rem', borderRadius: '0.5rem', borderLeft: '4px solid #3b82f6' }}>
-          <div style={{ fontSize: '0.875rem', fontWeight: '500', color: '#666' }}>Ingresos Totales</div>
-          <div style={{ fontSize: '1.875rem', fontWeight: '700', color: '#111827', marginTop: '0.5rem' }}>
+      <div className="report-kpi-grid">
+        <div className="report-kpi report-kpi-blue surface-glass">
+          <div className="report-kpi-label">Ingresos Totales</div>
+          <div className="report-kpi-value">
             ${summary.total_revenue.toLocaleString()}
           </div>
         </div>
 
-        <div style={{ background: '#f3f4f6', padding: '1.5rem', borderRadius: '0.5rem', borderLeft: '4px solid #10b981' }}>
-          <div style={{ fontSize: '0.875rem', fontWeight: '500', color: '#666' }}>Alumnos Activos</div>
-          <div style={{ fontSize: '1.875rem', fontWeight: '700', color: '#111827', marginTop: '0.5rem' }}>
+        <div className="report-kpi report-kpi-green surface-glass">
+          <div className="report-kpi-label">Alumnos Activos</div>
+          <div className="report-kpi-value">
             {summary.active_students}/{summary.total_students}
           </div>
         </div>
 
-        <div style={{ background: '#f3f4f6', padding: '1.5rem', borderRadius: '0.5rem', borderLeft: '4px solid #f59e0b' }}>
-          <div style={{ fontSize: '0.875rem', fontWeight: '500', color: '#666' }}>Asistencia (mes)</div>
-          <div style={{ fontSize: '1.875rem', fontWeight: '700', color: '#111827', marginTop: '0.5rem' }}>
+        <div className="report-kpi report-kpi-orange surface-glass">
+          <div className="report-kpi-label">Asistencia (mes)</div>
+          <div className="report-kpi-value">
             {summary.total_enrollments} clases
           </div>
         </div>
 
-        <div style={{ background: '#f3f4f6', padding: '1.5rem', borderRadius: '0.5rem', borderLeft: '4px solid #ef4444' }}>
-          <div style={{ fontSize: '0.875rem', fontWeight: '500', color: '#666' }}>Pagos Pendientes</div>
-          <div style={{ fontSize: '1.875rem', fontWeight: '700', color: '#111827', marginTop: '0.5rem' }}>
+        <div className="report-kpi report-kpi-red surface-glass">
+          <div className="report-kpi-label">Pagos Pendientes</div>
+          <div className="report-kpi-value">
             ${summary.pending_payments.toLocaleString()}
           </div>
         </div>
 
-        <div style={{ background: '#f3f4f6', padding: '1.5rem', borderRadius: '0.5rem', borderLeft: '4px solid #8b5cf6' }}>
-          <div style={{ fontSize: '0.875rem', fontWeight: '500', color: '#666' }}>Instructores</div>
-          <div style={{ fontSize: '1.875rem', fontWeight: '700', color: '#111827', marginTop: '0.5rem' }}>
+        <div className="report-kpi report-kpi-purple surface-glass">
+          <div className="report-kpi-label">Instructores</div>
+          <div className="report-kpi-value">
             {summary.total_teachers}
           </div>
         </div>
 
-        <div style={{ background: '#f3f4f6', padding: '1.5rem', borderRadius: '0.5rem', borderLeft: '4px solid #06b6d4' }}>
-          <div style={{ fontSize: '0.875rem', fontWeight: '500', color: '#666' }}>Tasa Asistencia</div>
-          <div style={{ fontSize: '1.875rem', fontWeight: '700', color: '#111827', marginTop: '0.5rem' }}>
+        <div className="report-kpi report-kpi-cyan surface-glass">
+          <div className="report-kpi-label">Tasa Asistencia</div>
+          <div className="report-kpi-value">
             {summary.attendance_rate.toFixed(1)}%
           </div>
         </div>
       </div>
 
       {/* Charts */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
+      <div className="report-chart-grid">
         {/* Attendance Trend */}
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '0.5rem', padding: '1.5rem' }}>
-          <h3 style={{ marginTop: 0, marginBottom: '1rem' }}>Tendencia de Asistencia (30 días)</h3>
+        <div className="report-chart-card surface-glass">
+          <div className="section-headline">
+            <h3>Tendencia de Asistencia</h3>
+            <span>30 días</span>
+          </div>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={attendanceTrend}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -134,8 +152,11 @@ export function ReportsPage() {
 
         {/* Revenue Breakdown */}
         {revenueBd.length > 0 && (
-          <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '0.5rem', padding: '1.5rem' }}>
-            <h3 style={{ marginTop: 0, marginBottom: '1rem' }}>Ingresos por Método de Pago</h3>
+          <div className="report-chart-card surface-glass">
+            <div className="section-headline">
+              <h3>Ingresos por Método de Pago</h3>
+              <span>Breakdown</span>
+            </div>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie data={revenueBd} dataKey="value" nameKey="label" cx="50%" cy="50%" outerRadius={80}>
@@ -153,8 +174,11 @@ export function ReportsPage() {
 
       {/* Top Students */}
       {topStudents.length > 0 && (
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '0.5rem', padding: '1.5rem' }}>
-          <h3 style={{ marginTop: 0, marginBottom: '1rem' }}>Top 10 Alumnos por Asistencia</h3>
+        <div className="report-chart-card surface-glass">
+          <div className="section-headline">
+            <h3>Top 10 Alumnos por Asistencia</h3>
+            <span>Ranking</span>
+          </div>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={topStudents}>
               <CartesianGrid strokeDasharray="3 3" />

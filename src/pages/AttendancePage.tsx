@@ -50,12 +50,12 @@ export function AttendancePage() {
 
   if (loading) {
     return (
-      <section>
+      <section className="page-shell">
         <PageHeader
           title="Control de Asistencias"
           subtitle="Registra asistencia por clase y visualiza el histórico operativo del dojo."
         />
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <div className="spinner"></div>
           <p>Cargando asistencias...</p>
         </div>
@@ -64,13 +64,13 @@ export function AttendancePage() {
   }
 
   return (
-    <section>
+    <section className="page-shell">
       <PageHeader
         title="Control de Asistencias"
         subtitle="Registra asistencia por clase y visualiza el histórico operativo del dojo."
       />
 
-      <form className="card" onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
+      <form className="card form-section surface-glass" onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
         <div className="form-row">
           <select
             name="student_id"
@@ -102,7 +102,7 @@ export function AttendancePage() {
       </form>
 
       {rows.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <p>Todavía no hay asistencias registradas.</p>
         </div>
       ) : (

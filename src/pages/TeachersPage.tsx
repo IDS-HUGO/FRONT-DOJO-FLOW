@@ -62,9 +62,9 @@ export function TeachersPage() {
 
   if (loading) {
     return (
-      <div className="page">
+      <div className="page page-shell">
         <PageHeader title="Instructores" subtitle="Gestión de profesores y especialistas" />
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <div className="spinner"></div>
           <p>Cargando instructores...</p>
         </div>
@@ -73,10 +73,10 @@ export function TeachersPage() {
   }
 
   return (
-    <div className="page">
+    <div className="page page-shell">
       <PageHeader title="Instructores" subtitle="Gestión de profesores y especialistas" />
 
-      <form onSubmit={handleSubmit} className="form-section card">
+      <form onSubmit={handleSubmit} className="form-section card surface-glass">
         <h3>Nuevo Instructor</h3>
         <div className="form-grid">
           <input
@@ -135,7 +135,7 @@ export function TeachersPage() {
       />
 
       {rows.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <p>No hay instructores registrados todavía.</p>
         </div>
       ) : (

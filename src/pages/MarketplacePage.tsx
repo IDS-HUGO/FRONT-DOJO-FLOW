@@ -29,12 +29,12 @@ export function MarketplacePage() {
 
   if (loading) {
     return (
-      <section>
+      <section className="page-shell">
         <PageHeader
           title="Marketplace"
           subtitle="Administra productos oficiales y genera ingresos adicionales por equipamiento."
         />
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <div className="spinner"></div>
           <p>Cargando catálogo...</p>
         </div>
@@ -43,14 +43,14 @@ export function MarketplacePage() {
   }
 
   return (
-    <section>
+    <section className="page-shell">
       <PageHeader
         title="Marketplace"
         subtitle="Administra productos oficiales y genera ingresos adicionales por equipamiento."
       />
 
       <div className="split" style={{ marginBottom: "1rem" }}>
-        <form className="card" onSubmit={handleSubmit}>
+        <form className="card form-section surface-glass" onSubmit={handleSubmit}>
           <h3 style={{ marginTop: 0 }}>Nuevo producto</h3>
           <div className="form-row">
             <input
@@ -99,7 +99,7 @@ export function MarketplacePage() {
           </button>
         </form>
 
-        <div className="card">
+        <div className="card surface-glass">
           <h3 style={{ marginTop: 0 }}>Resumen</h3>
           <p className="page-subtitle">Productos activos en tu catálogo</p>
           <p className="price" style={{ marginTop: 0 }}>{activeProducts}</p>
@@ -115,7 +115,7 @@ export function MarketplacePage() {
       ) : (
         <div className="grid cols-3">
           {items.map((item) => (
-            <article key={item.id} className="card">
+            <article key={item.id} className="card surface-glass">
               <h3 style={{ marginTop: 0 }}>{item.name}</h3>
               <p className="page-subtitle" style={{ marginBottom: "0.3rem" }}>{item.category}</p>
               <p className="price" style={{ marginTop: 0 }}>${item.price.toLocaleString("es-MX")}</p>

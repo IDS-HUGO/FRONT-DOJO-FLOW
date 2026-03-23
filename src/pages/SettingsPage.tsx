@@ -56,12 +56,12 @@ export function SettingsPage() {
 
   if (loading) {
     return (
-      <section>
+      <section className="page-shell">
         <PageHeader
           title="Configuración"
           subtitle="Personaliza datos de la academia y parámetros operativos principales."
         />
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <div className="spinner"></div>
           <p>Cargando configuración...</p>
         </div>
@@ -70,13 +70,28 @@ export function SettingsPage() {
   }
 
   return (
-    <section>
+    <section className="page-shell">
       <PageHeader
         title="Configuración"
         subtitle="Personaliza datos de la academia y parámetros operativos principales."
       />
 
-      <form className="card" onSubmit={handleSubmit}>
+      <div className="settings-rail surface-glass">
+        <div>
+          <span className="executive-label">Academia activa</span>
+          <strong>{formData.dojo_name || "Sin definir"}</strong>
+        </div>
+        <div>
+          <span className="executive-label">Zona horaria</span>
+          <strong>{formData.timezone || "No asignada"}</strong>
+        </div>
+        <div>
+          <span className="executive-label">Moneda</span>
+          <strong>{formData.currency}</strong>
+        </div>
+      </div>
+
+      <form className="card form-section surface-glass" onSubmit={handleSubmit}>
         <div className="form-row">
           <input
             name="dojo_name"
@@ -142,7 +157,7 @@ export function SettingsPage() {
           </button>
         </div>
 
-        <button type="button" className="secondary" style={{ maxWidth: 220 }} onClick={logout}>
+        <button type="button" className="secondary danger-button" style={{ maxWidth: 220 }} onClick={logout}>
           Cerrar sesión
         </button>
       </form>

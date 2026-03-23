@@ -73,9 +73,9 @@ export function CouponsPage() {
 
   if (loading) {
     return (
-      <div className="page">
+      <div className="page page-shell">
         <PageHeader title="Cupones y Descuentos" subtitle="Gestión de promociones y ofertas" />
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <div className="spinner"></div>
           <p>Cargando cupones...</p>
         </div>
@@ -84,10 +84,10 @@ export function CouponsPage() {
   }
 
   return (
-    <div className="page">
+    <div className="page page-shell">
       <PageHeader title="Cupones y Descuentos" subtitle="Gestión de promociones y ofertas" />
 
-      <form onSubmit={handleSubmit} className="form-section card">
+      <form onSubmit={handleSubmit} className="form-section card surface-glass">
         <h3>Nuevo Cupón</h3>
         <div className="form-grid">
           <input
@@ -148,7 +148,7 @@ export function CouponsPage() {
       />
 
       {rows.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <p>No hay cupones creados todavía.</p>
         </div>
       ) : (

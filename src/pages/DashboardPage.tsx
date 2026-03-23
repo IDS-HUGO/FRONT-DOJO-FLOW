@@ -30,12 +30,12 @@ export function DashboardPage() {
 
   if (loading) {
     return (
-      <section>
+      <section className="page-shell">
         <PageHeader
           title="Dashboard Ejecutivo"
           subtitle="Monitorea ingresos, retención y rendimiento de tu academia en tiempo real."
         />
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div className="hero-empty surface-glass">
           <div className="spinner"></div>
           <p>Cargando indicadores clave...</p>
         </div>
@@ -44,11 +44,26 @@ export function DashboardPage() {
   }
 
   return (
-    <section>
+    <section className="page-shell">
       <PageHeader
         title="Dashboard Ejecutivo"
         subtitle="Monitorea ingresos, retención y rendimiento de tu academia en tiempo real."
       />
+
+      <div className="executive-strip surface-glass">
+        <div>
+          <span className="executive-label">Visión general</span>
+          <strong>Tu academia al momento</strong>
+        </div>
+        <div>
+          <span className="executive-label">Operación</span>
+          <strong>Seguimiento en vivo</strong>
+        </div>
+        <div>
+          <span className="executive-label">Crecimiento</span>
+          <strong>Ingresos y retención</strong>
+        </div>
+      </div>
 
       <div className="grid cols-4">
         {cards.map((card) => (
@@ -56,8 +71,11 @@ export function DashboardPage() {
         ))}
       </div>
 
-      <div className="card" style={{ marginTop: "1rem", height: 320 }}>
-        <h3 style={{ marginTop: 0 }}>Tendencia de MRR (6 meses)</h3>
+      <div className="card executive-chart surface-glass">
+        <div className="section-headline">
+          <h3>Tendencia de MRR</h3>
+          <span>Últimos 6 meses</span>
+        </div>
         {trend.length > 0 ? (
           <ResponsiveContainer width="100%" height="90%">
             <LineChart data={trend}>
@@ -69,7 +87,7 @@ export function DashboardPage() {
             </LineChart>
           </ResponsiveContainer>
         ) : (
-          <p style={{ textAlign: "center", color: "#999" }}>No hay datos de tendencia disponibles</p>
+          <p className="empty-inline">No hay datos de tendencia disponibles</p>
         )}
       </div>
     </section>
