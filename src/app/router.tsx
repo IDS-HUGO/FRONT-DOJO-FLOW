@@ -1,0 +1,72 @@
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import { AppLayout } from "../layouts/AppLayout";
+import { AttendancePage } from "../pages/AttendancePage";
+import { BeltsPage } from "../pages/BeltsPage";
+import { CouponsPage } from "../pages/CouponsPage";
+import { DashboardPage } from "../pages/DashboardPage";
+import { LandingPage } from "../pages/LandingPage";
+import { LoginPage } from "../pages/LoginPage";
+import { MarketplacePage } from "../pages/MarketplacePage";
+import { PaymentsPage } from "../pages/PaymentsPage";
+import { PlansPage } from "../pages/PlansPage";
+import { ReportsPage } from "../pages/ReportsPage";
+import { SchedulesPage } from "../pages/SchedulesPage";
+import { SettingsPage } from "../pages/SettingsPage";
+import { StudentsPage } from "../pages/StudentsPage";
+import { TeachersPage } from "../pages/TeachersPage";
+
+function protectedLoader() {
+  const token = localStorage.getItem("dojo_token");
+  if (!token) {
+    throw new Response("Unauthorized", { status: 401 });
+  }
+  return null;
+}
+
+function ownerOnlyLoader() {
+  const token = localStorage.getItem("dojo_token");
+  const email = localStorage.getItem("dojo_user_email");
+
+  if (!token || email !== "owner@dojoflow.com") {
+    throw new Response("Unauthorized", { status: 401 });
+  }
+
+  return null;
+}
+
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <LandingPage />,
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/register",
+    loader: ownerOnlyLoader,
+    errorElement: <Navigate to="/login" replace />,
+    element: <Navigate to="/app/settings" replace />,
+  },
+  {
+    path: "/app",
+    element: <AppLayout />,
+    loader: protectedLoader,
+    errorElement: <Navigate to="/login" replace />,
+    children: [
+      { index: true, element: <DashboardPage /> },
+      { path: "students", element: <StudentsPage /> },
+      { path: "attendance", element: <AttendancePage /> },
+      { path: "payments", element: <PaymentsPage /> },
+      { path: "belts", element: <BeltsPage /> },
+      { path: "plans", element: <PlansPage /> },
+      { path: "marketplace", element: <MarketplacePage /> },
+      { path: "teachers", element: <TeachersPage /> },
+      { path: "schedules", element: <SchedulesPage /> },
+      { path: "coupons", element: <CouponsPage /> },
+      { path: "reports", element: <ReportsPage /> },
+      { path: "settings", element: <SettingsPage /> },
+    ],
+  },
+]);
