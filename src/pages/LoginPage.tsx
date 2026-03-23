@@ -16,8 +16,17 @@ export function LoginPage() {
 
     try {
       setLoading(true);
-      await login(username, password);
-      navigate("/app");
+      const response = await login(username, password);
+      
+      // Store user email for role checking
+      localStorage.setItem('user_email', username);
+      
+      // Redirect based on role
+      if (username === 'owner@dojoflow.com') {
+        navigate("/admin");
+      } else {
+        navigate("/app");
+      }
     } catch {
       setError("Credenciales inválidas");
     } finally {

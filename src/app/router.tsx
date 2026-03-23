@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AppLayout } from "../layouts/AppLayout";
+import { AdminDashboard } from "../pages/AdminDashboard";
 import { AttendancePage } from "../pages/AttendancePage";
 import { BeltsPage } from "../pages/BeltsPage";
 import { CouponsPage } from "../pages/CouponsPage";
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+  },
+  {
+    path: "/admin",
+    element: <AdminDashboard />,
   },
   {
     path: "/register",
