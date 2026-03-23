@@ -2,7 +2,10 @@
 :root {
   --primary: #2C2973;
   --primary-light: #3A3A8E;
+  --primary-dark: #252359;
   --orange: #F26B1D;
+  --orange-deep: #D94929;
+  --surface: #F2F2F2;
   --text-dark: #1A1A1A;
   --text-light: #666666;
   --bg-light: #F5F5F5;
@@ -17,9 +20,13 @@
 }
 
 body, html {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.6;
   color: var(--text-dark);
+  background:
+    radial-gradient(circle at top left, rgba(44, 41, 115, 0.08), transparent 30%),
+    radial-gradient(circle at top right, rgba(242, 107, 29, 0.08), transparent 28%),
+    var(--surface);
 }
 
 /* ==================== NAVIGATION ==================== */
@@ -29,20 +36,21 @@ body, html {
   left: 0;
   right: 0;
   height: 70px;
-  background: var(--white);
-  border-bottom: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(44, 41, 115, 0.08);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 40px;
   z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 12px 28px rgba(37, 35, 89, 0.08);
 }
 
 .nav-brand {
   font-size: 24px;
   font-weight: 700;
-  color: var(--primary);
+  color: var(--primary-dark);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -56,9 +64,9 @@ body, html {
 
 .nav-login-btn {
   padding: 10px 24px;
-  border: 1px solid var(--primary);
-  background: transparent;
-  color: var(--primary);
+  border: 1px solid rgba(44, 41, 115, 0.18);
+  background: linear-gradient(135deg, rgba(44, 41, 115, 0.04), rgba(44, 41, 115, 0.09));
+  color: var(--primary-dark);
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
@@ -67,7 +75,7 @@ body, html {
 }
 
 .nav-login-btn:hover {
-  background: var(--primary);
+  background: var(--primary-dark);
   color: var(--white);
 }
 
@@ -79,16 +87,36 @@ body, html {
 }
 
 .hero-section {
-  padding: 120px 40px;
+  padding: 132px 40px 108px;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   margin-top: 70px;
   text-align: center;
+  position: relative;
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 32px 24px auto;
+  height: 280px;
+  border-radius: 32px;
+  background: linear-gradient(135deg, rgba(44, 41, 115, 0.1), rgba(242, 107, 29, 0.09));
+  filter: blur(0.2px);
+  z-index: 0;
 }
 
 .hero-content {
   animation: fadeInUp 0.8s ease-out;
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(44, 41, 115, 0.08);
+  border-radius: 28px;
+  padding: 56px 40px;
+  box-shadow: 0 30px 80px rgba(37, 35, 89, 0.12);
+  backdrop-filter: blur(14px);
 }
 
 .hero-title {
@@ -96,7 +124,7 @@ body, html {
   line-height: 1.2;
   font-weight: 700;
   margin-bottom: 24px;
-  color: var(--text-dark);
+  color: var(--primary-dark);
 }
 
 .hero-subtitle {
@@ -129,24 +157,25 @@ body, html {
 }
 
 .btn-primary {
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   color: var(--white);
+  box-shadow: 0 14px 30px rgba(44, 41, 115, 0.2);
 }
 
 .btn-primary:hover {
-  background: var(--primary-light);
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(44, 41, 115, 0.2);
+  box-shadow: 0 18px 34px rgba(44, 41, 115, 0.25);
 }
 
 .btn-secondary {
-  background: transparent;
-  color: var(--primary);
-  border: 1px solid var(--primary);
+  background: rgba(44, 41, 115, 0.04);
+  color: var(--primary-dark);
+  border: 1px solid rgba(44, 41, 115, 0.16);
 }
 
 .btn-secondary:hover {
-  background: var(--primary);
+  background: rgba(44, 41, 115, 0.1);
   color: var(--white);
 }
 
@@ -173,6 +202,10 @@ body, html {
   gap: 8px;
   font-size: 14px;
   color: var(--text-light);
+  background: rgba(242, 242, 242, 0.8);
+  border: 1px solid rgba(44, 41, 115, 0.06);
+  padding: 10px 14px;
+  border-radius: 999px;
 }
 
 .indicator span {
@@ -204,15 +237,17 @@ body, html {
 
 .feature-card {
   padding: 32px;
-  background: var(--bg-light);
-  border-radius: 8px;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%);
+  border-radius: 18px;
+  border: 1px solid rgba(44, 41, 115, 0.08);
   transition: all 0.3s ease;
   text-align: center;
+  box-shadow: 0 14px 30px rgba(37, 35, 89, 0.08);
 }
 
 .feature-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 40px rgba(37, 35, 89, 0.12);
 }
 
 .feature-icon {
@@ -235,7 +270,7 @@ body, html {
 /* ==================== PROBLEM SECTION ==================== */
 .problem-section {
   padding: 80px 40px;
-  background: var(--bg-light);
+  background: linear-gradient(180deg, rgba(44, 41, 115, 0.06), rgba(242, 242, 242, 0.95));
   width: 100%;
 }
 
@@ -260,8 +295,10 @@ body, html {
 .problem-card {
   background: var(--white);
   padding: 32px;
-  border-radius: 8px;
-  border-left: 4px solid var(--orange);
+  border-radius: 18px;
+  border: 1px solid rgba(44, 41, 115, 0.08);
+  border-left: 5px solid var(--orange);
+  box-shadow: 0 14px 30px rgba(37, 35, 89, 0.08);
 }
 
 .problem-card h3 {
@@ -293,21 +330,22 @@ body, html {
 
 .pricing-card {
   background: var(--white);
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
+  border: 1px solid rgba(44, 41, 115, 0.1);
+  border-radius: 22px;
   padding: 40px;
   position: relative;
   transition: all 0.3s ease;
+  box-shadow: 0 16px 40px rgba(37, 35, 89, 0.08);
 }
 
 .pricing-card:hover {
-  border-color: var(--orange);
-  box-shadow: 0 8px 24px rgba(242, 107, 29, 0.1);
+  border-color: rgba(242, 107, 29, 0.4);
+  box-shadow: 0 20px 48px rgba(242, 107, 29, 0.16);
 }
 
 .pricing-card.highlighted {
-  border-color: var(--orange);
-  background: linear-gradient(135deg, rgba(242, 107, 29, 0.05) 0%, rgba(242, 107, 29, 0.02) 100%);
+  border-color: rgba(242, 107, 29, 0.5);
+  background: linear-gradient(180deg, rgba(242, 107, 29, 0.08) 0%, rgba(44, 41, 115, 0.03) 100%);
   transform: scale(1.02);
 }
 
@@ -346,7 +384,7 @@ body, html {
 .plan-price {
   font-size: 36px;
   font-weight: 700;
-  color: var(--primary);
+  color: var(--primary-dark);
 }
 
 .plan-freq {
@@ -368,7 +406,7 @@ body, html {
 
 /* ==================== FOOTER ==================== */
 .landing-footer {
-  background: var(--primary-dark);
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
   color: var(--white);
   padding: 60px 40px 20px;
 }
@@ -408,7 +446,7 @@ body, html {
 }
 
 .footer-section a:hover {
-  color: var(--orange);
+  color: #ffd4bd;
 }
 
 .footer-bottom {
@@ -436,11 +474,13 @@ body, html {
 
 .modal-content {
   background: var(--white);
-  border-radius: 8px;
+  border-radius: 22px;
   width: 100%;
   max-width: 500px;
   position: relative;
   animation: slideUp 0.3s ease-out;
+  box-shadow: 0 24px 70px rgba(37, 35, 89, 0.24);
+  border: 1px solid rgba(44, 41, 115, 0.08);
 }
 
 .modal-close {
@@ -464,7 +504,7 @@ body, html {
 .purchase-form h2 {
   font-size: 24px;
   margin-bottom: 32px;
-  color: var(--text-dark);
+  color: var(--primary-dark);
 }
 
 .form-group {
@@ -483,17 +523,18 @@ body, html {
 .form-group select {
   width: 100%;
   padding: 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border: 1px solid rgba(44, 41, 115, 0.14);
+  border-radius: 12px;
   font-size: 14px;
   transition: border-color 0.3s ease;
+  background: #fff;
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(44, 41, 115, 0.1);
+  border-color: var(--orange);
+  box-shadow: 0 0 0 4px rgba(242, 107, 29, 0.14);
 }
 
 .form-row {
@@ -510,15 +551,15 @@ body, html {
 }
 
 .form-message.success {
-  background: #D1F4D1;
-  color: #1B5E20;
-  border-left: 4px solid #1B5E20;
+  background: rgba(242, 107, 29, 0.08);
+  color: var(--primary-dark);
+  border-left: 4px solid var(--orange);
 }
 
 .form-message.error {
-  background: #FFEBEE;
-  color: #B91C1C;
-  border-left: 4px solid #B91C1C;
+  background: rgba(217, 73, 41, 0.08);
+  color: #8f2518;
+  border-left: 4px solid var(--orange-deep);
 }
 
 /* ==================== SECTION CONTAINER ==================== */

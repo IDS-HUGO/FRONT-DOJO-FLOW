@@ -2,18 +2,21 @@
 
 .admin-dashboard {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(44, 41, 115, 0.12), transparent 24%),
+    radial-gradient(circle at top right, rgba(242, 107, 29, 0.1), transparent 20%),
+    linear-gradient(180deg, #f2f2f2 0%, #ececf4 100%);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .admin-navbar {
-  background: #2C2973;
+  background: linear-gradient(135deg, #252359 0%, #2C2973 58%, #D94929 160%);
   color: white;
   padding: 20px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 18px 40px rgba(37, 35, 89, 0.2);
 }
 
 .admin-navbar-brand h1 {
@@ -34,11 +37,11 @@
 }
 
 .btn-logout {
-  background: #F26B1D;
+  background: linear-gradient(135deg, #F26B1D, #D94929);
   color: white;
   border: none;
   padding: 10px 20px;
-  border-radius: 4px;
+  border-radius: 999px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -46,7 +49,8 @@
 }
 
 .btn-logout:hover {
-  background: #d95a0b;
+  filter: brightness(1.02);
+  transform: translateY(-1px);
 }
 
 .admin-container {
@@ -64,12 +68,14 @@
 }
 
 .stat-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.82);
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  box-shadow: 0 18px 34px rgba(37, 35, 89, 0.1);
+  border: 1px solid rgba(44, 41, 115, 0.08);
   border-left: 4px solid #2C2973;
   transition: transform 0.3s, box-shadow 0.3s;
+  backdrop-filter: blur(12px);
 }
 
 .stat-card:hover {
@@ -100,7 +106,7 @@
 .stat-label {
   font-size: 12px;
   text-transform: uppercase;
-  color: #666;
+  color: #5f5d73;
   margin-bottom: 10px;
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -109,16 +115,18 @@
 .stat-value {
   font-size: 32px;
   font-weight: 700;
-  color: #2C2973;
+  color: #252359;
 }
 
 /* Admin Section */
 .admin-section {
-  background: white;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 22px;
   padding: 30px;
   margin-bottom: 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 18px 38px rgba(37, 35, 89, 0.1);
+  border: 1px solid rgba(44, 41, 115, 0.08);
+  backdrop-filter: blur(14px);
 }
 
 .section-header {
@@ -132,7 +140,7 @@
 
 .section-header h2 {
   margin: 0;
-  color: #2C2973;
+  color: #252359;
   font-size: 22px;
 }
 
@@ -143,7 +151,7 @@
 }
 
 .filter-btn {
-  background: #f0f0f0;
+  background: rgba(255, 255, 255, 0.8);
   border: 2px solid transparent;
   padding: 8px 16px;
   border-radius: 4px;
@@ -151,15 +159,15 @@
   font-size: 14px;
   font-weight: 500;
   transition: all 0.3s;
-  color: #666;
+  color: #5f5d73;
 }
 
 .filter-btn:hover {
-  background: #e0e0e0;
+  background: rgba(44, 41, 115, 0.08);
 }
 
 .filter-btn.active {
-  background: #2C2973;
+  background: #252359;
   color: white;
   border-color: #F26B1D;
 }
@@ -176,15 +184,15 @@
 }
 
 .orders-table thead {
-  background: #f8f9fa;
-  border-bottom: 2px solid #e0e0e0;
+  background: linear-gradient(180deg, rgba(44, 41, 115, 0.08), rgba(255, 255, 255, 0.7));
+  border-bottom: 2px solid rgba(44, 41, 115, 0.1);
 }
 
 .orders-table th {
   padding: 15px;
   text-align: left;
   font-weight: 600;
-  color: #2C2973;
+  color: #252359;
   text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 0.5px;
@@ -192,12 +200,12 @@
 
 .orders-table td {
   padding: 15px;
-  border-bottom: 1px solid #f0f0f0;
-  color: #333;
+  border-bottom: 1px solid rgba(44, 41, 115, 0.08);
+  color: #2a2a3f;
 }
 
 .orders-table tbody tr:hover {
-  background: #f9f9f9;
+  background: rgba(44, 41, 115, 0.04);
 }
 
 .orders-table tbody tr.status-pending {
@@ -219,13 +227,13 @@
 
 .order-id {
   font-weight: 600;
-  color: #2C2973;
+  color: #252359;
 }
 
 .email {
   font-family: 'Courier New', monospace;
   font-size: 13px;
-  color: #666;
+  color: #5f5d73;
 }
 
 .amount {
@@ -235,7 +243,7 @@
 
 .date {
   font-size: 13px;
-  color: #999;
+  color: #7c7994;
 }
 
 .status-badge {
@@ -248,30 +256,30 @@
 }
 
 .status-badge.status-pending {
-  background: #FFF9C4;
-  color: #F57F17;
+  background: rgba(242, 107, 29, 0.12);
+  color: #b24c0d;
 }
 
 .status-badge.status-paid {
-  background: #C8E6C9;
-  color: #2E7D32;
+  background: rgba(44, 41, 115, 0.1);
+  color: #252359;
 }
 
 .status-badge.status-completed {
-  background: #BBDEFB;
-  color: #1565C0;
+  background: rgba(217, 73, 41, 0.12);
+  color: #8f2518;
 }
 
 .status-badge.status-cancelled {
-  background: #FFCDD2;
-  color: #C62828;
+  background: rgba(217, 73, 41, 0.16);
+  color: #8f2518;
 }
 
 /* Empty State */
 .empty-state {
   text-align: center;
   padding: 40px;
-  color: #999;
+  color: #7c7994;
 }
 
 .empty-state p {
@@ -287,19 +295,20 @@
 }
 
 .metric-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #252359 0%, #2C2973 55%, #F26B1D 180%);
   color: white;
   padding: 25px;
-  border-radius: 8px;
+  border-radius: 18px;
   text-align: center;
+  box-shadow: 0 16px 34px rgba(37, 35, 89, 0.18);
 }
 
 .metric-card:nth-child(2) {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #2C2973 0%, #252359 100%);
 }
 
 .metric-card:nth-child(3) {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: linear-gradient(135deg, #F26B1D 0%, #D94929 100%);
 }
 
 .metric-label {
@@ -323,7 +332,7 @@
   align-items: center;
   min-height: 100vh;
   font-size: 18px;
-  color: #666;
+  color: #5f5d73;
 }
 
 .admin-error {
