@@ -95,7 +95,10 @@ const AdminDashboard = () => {
     <div className="admin-dashboard">
       <div className="admin-navbar">
         <div className="admin-navbar-brand">
-          <h1>🔐 DojoFlow Admin</h1>
+          <div className="admin-brand-row">
+            <img src="/logos/LOGO.jpeg" alt="DojoFlow logo" className="logo-mark logo-mark--sm" />
+            <h1>DojoFlow Admin</h1>
+          </div>
         </div>
         <div className="admin-navbar-actions">
           <span className="admin-user-info">owner@dojoflow.com</span>

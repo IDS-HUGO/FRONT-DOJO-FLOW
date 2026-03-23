@@ -45,10 +45,17 @@ export const LandingPage: React.FC = () => {
 
   return (
     <div className="landing-container">
+      <div className="landing-orb landing-orb-one" aria-hidden="true"></div>
+      <div className="landing-orb landing-orb-two" aria-hidden="true"></div>
+      <div className="landing-orb landing-orb-three" aria-hidden="true"></div>
       {/* Navigation */}
       <nav className="landing-nav">
         <div className="nav-brand">
-          <span className="logo-text">DojoFlow</span>
+          <img src="/logos/LOGO.jpeg" alt="DojoFlow logo" className="nav-logo" />
+          <div className="nav-brand-copy">
+            <span className="logo-text">DojoFlow</span>
+            <span className="nav-brand-tag">Administra. Vende. Escala.</span>
+          </div>
         </div>
         <div className="nav-right">
           <button onClick={() => navigate("/login")} className="nav-login-btn">
@@ -60,12 +67,28 @@ export const LandingPage: React.FC = () => {
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
+          <div className="hero-badge">Plataforma premium para dojos</div>
           <h1 className="hero-title">
             Profesionaliza tu Academia <br /> de Artes Marciales
           </h1>
           <p className="hero-subtitle">
             Automatiza pagos, controla asistencias, sigue el progreso de tus estudiantes y crece tu negocio.
           </p>
+
+          <div className="hero-spotlight">
+            <div>
+              <strong>+54%</strong>
+              <span>más orden operativo</span>
+            </div>
+            <div>
+              <strong>24/7</strong>
+              <span>seguimiento activo</span>
+            </div>
+            <div>
+              <strong>1 click</strong>
+              <span>para vender y cobrar</span>
+            </div>
+          </div>
 
           <div className="cta-buttons">
             <button onClick={() => handleSelectPlan(1)} className="btn btn-primary btn-large">
@@ -179,7 +202,10 @@ export const LandingPage: React.FC = () => {
       <footer className="landing-footer">
         <div className="footer-content">
           <div className="footer-section">
-            <h4>DojoFlow</h4>
+            <div className="footer-brand-row">
+              <img src="/logos/LOGO.jpeg" alt="DojoFlow logo" className="footer-logo" />
+              <h4>DojoFlow</h4>
+            </div>
             <p>El aliado tecnológico de tu academia de artes marciales</p>
           </div>
           <div className="footer-section">

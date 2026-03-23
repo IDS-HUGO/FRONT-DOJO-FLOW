@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "../components/PageHeader";
 import { login } from "../lib/api";
+import "../styles/landing-new.css";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -35,12 +36,22 @@ export function LoginPage() {
   }
 
   return (
-    <main className="main" style={{ maxWidth: 420, margin: "4rem auto" }}>
-      <PageHeader
-        title="Iniciar sesión"
-        subtitle="Accede al panel administrativo de tu academia DojoFlow."
-      />
-      <form className="card" onSubmit={onSubmit}>
+    <main className="main login-page-shell" style={{ maxWidth: 520, margin: "4rem auto" }}>
+      <section className="login-hero card surface-glass">
+        <div className="login-hero-brand">
+          <img src="/logos/LOGO.jpeg" alt="DojoFlow logo" className="logo-mark" />
+          <div>
+            <div className="brand-kicker">Acceso seguro</div>
+            <h1 className="login-brand">DojoFlow</h1>
+          </div>
+        </div>
+        <PageHeader
+          title="Iniciar sesión"
+          subtitle="Accede al panel administrativo de tu academia DojoFlow."
+        />
+      </section>
+
+      <form className="card login-card surface-glass" onSubmit={onSubmit}>
         <div style={{ marginBottom: "0.8rem" }}>
           <label>Usuario</label>
           <input value={username} onChange={(e) => setUsername(e.target.value)} />

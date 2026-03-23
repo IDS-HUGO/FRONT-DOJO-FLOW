@@ -15,10 +15,16 @@
   --muted: #66637a;
   --shadow-lg: 0 24px 60px rgba(37, 35, 89, 0.16);
   --shadow-md: 0 14px 30px rgba(37, 35, 89, 0.1);
+  --cursor-ring: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'%3E%3Ccircle cx='17' cy='17' r='11' fill='none' stroke='%23F26B1D' stroke-width='2.2'/%3E%3Ccircle cx='17' cy='17' r='3' fill='%23252359'/%3E%3C/svg%3E") 17 17, auto;
 }
 
 * {
   box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(242, 107, 29, 0.22);
+  color: var(--navy-deep);
 }
 
 body {
@@ -29,6 +35,37 @@ body {
     radial-gradient(circle at top right, rgba(242, 107, 29, 0.08), transparent 24%),
     var(--surface);
   color: var(--text);
+  cursor: var(--cursor-ring);
+  overflow-x: hidden;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 999px;
+  filter: blur(12px);
+  opacity: 0.65;
+  animation: floatGlow 16s ease-in-out infinite;
+}
+
+body::before {
+  width: 320px;
+  height: 320px;
+  left: -120px;
+  top: 120px;
+  background: radial-gradient(circle, rgba(44, 41, 115, 0.18) 0%, rgba(44, 41, 115, 0.02) 70%, transparent 72%);
+}
+
+body::after {
+  width: 260px;
+  height: 260px;
+  right: -90px;
+  bottom: 120px;
+  background: radial-gradient(circle, rgba(242, 107, 29, 0.16) 0%, rgba(217, 73, 41, 0.02) 68%, transparent 70%);
+  animation-delay: -6s;
 }
 
 a {
@@ -40,6 +77,8 @@ a {
   display: grid;
   grid-template-columns: 280px 1fr;
   min-height: 100vh;
+  position: relative;
+  z-index: 1;
 }
 
 .sidebar {
@@ -105,6 +144,55 @@ a {
   background:
     radial-gradient(circle at top right, rgba(242, 107, 29, 0.06), transparent 20%),
     radial-gradient(circle at top left, rgba(44, 41, 115, 0.06), transparent 25%);
+}
+
+.logo-mark {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: 0 12px 24px rgba(37, 35, 89, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: #fff;
+}
+
+.logo-mark--sm {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+}
+
+.logo-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.brand-kicker {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.brand-title {
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.surface-glass {
+  background: rgba(255, 255, 255, 0.74);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(44, 41, 115, 0.08);
+  box-shadow: var(--shadow-lg);
 }
 
 .topbar {
@@ -438,6 +526,41 @@ th {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
+}
+
+button,
+input,
+select,
+textarea,
+[role="button"],
+.nav-link,
+.topbar-link,
+.btn,
+.nav-login-btn,
+.btn-logout,
+.filter-btn {
+  cursor: pointer;
+}
+
+@keyframes floatGlow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -18px, 0) scale(1.03);
+  }
+}
+
+@media (max-width: 768px) {
+  .logo-mark {
+    width: 46px;
+    height: 46px;
+  }
+
+  .brand-title {
+    font-size: 1rem;
+  }
 }
 
 .form-section {
