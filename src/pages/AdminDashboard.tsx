@@ -38,8 +38,8 @@ const AdminDashboard = () => {
   const [statusFilter, setStatusFilter] = useState('');
 
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    const email = localStorage.getItem('user_email');
+    const token = localStorage.getItem('dojo_token');
+    const email = localStorage.getItem('dojo_user_email');
 
     if (!token || email !== 'owner@dojoflow.com') {
       navigate('/login');
@@ -79,8 +79,8 @@ const AdminDashboard = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user_email');
+    localStorage.removeItem('dojo_token');
+    localStorage.removeItem('dojo_user_email');
     navigate('/login');
   };
 

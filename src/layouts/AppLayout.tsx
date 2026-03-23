@@ -15,7 +15,7 @@ export function AppLayout() {
       <main className="main">
         <div className="topbar">
           <span className="topbar-date">{today}</span>
-          <a href="/settings" className="topbar-link">
+          <a href="/app/settings" className="topbar-link">
             Configuración del dojo
           </a>
         </div>

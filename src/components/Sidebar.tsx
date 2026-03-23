@@ -1,18 +1,18 @@
 import { NavLink } from "react-router-dom";
 
 const links = [
-  ["/", "Dashboard"],
-  ["/students", "Alumnos"],
-  ["/attendance", "Asistencias"],
-  ["/payments", "Pagos"],
-  ["/belts", "Grados"],
-  ["/teachers", "Instructores"],
-  ["/schedules", "Horarios"],
-  ["/plans", "Planes"],
-  ["/marketplace", "Marketplace"],
-  ["/coupons", "Cupones"],
-  ["/reports", "Reportes"],
-  ["/settings", "Configuración"],
+  ["/app", "Dashboard"],
+  ["/app/students", "Alumnos"],
+  ["/app/attendance", "Asistencias"],
+  ["/app/payments", "Pagos"],
+  ["/app/belts", "Grados"],
+  ["/app/teachers", "Instructores"],
+  ["/app/schedules", "Horarios"],
+  ["/app/plans", "Planes"],
+  ["/app/marketplace", "Marketplace"],
+  ["/app/coupons", "Cupones"],
+  ["/app/reports", "Reportes"],
+  ["/app/settings", "Configuración"],
 ];
 
 export function Sidebar() {

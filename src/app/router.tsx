@@ -1,6 +1,6 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter, Navigate, redirect } from "react-router-dom";
 import { AppLayout } from "../layouts/AppLayout";
-import { AdminDashboard } from "../pages/AdminDashboard";
+import AdminDashboard from "../pages/AdminDashboard";
 import { AttendancePage } from "../pages/AttendancePage";
 import { BeltsPage } from "../pages/BeltsPage";
 import { CouponsPage } from "../pages/CouponsPage";
@@ -29,10 +29,10 @@ function ownerOnlyLoader() {
   const email = localStorage.getItem("dojo_user_email");
 
   if (!token || email !== "owner@dojoflow.com") {
-    throw new Response("Unauthorized", { status: 401 });
+    throw redirect("/login");
   }
 
-  return null;
+  return redirect("/app/settings");
 }
 
 export const router = createBrowserRouter([
@@ -51,8 +51,6 @@ export const router = createBrowserRouter([
   {
     path: "/register",
     loader: ownerOnlyLoader,
-    errorElement: <Navigate to="/login" replace />,
-    element: <Navigate to="/app/settings" replace />,
   },
   {
     path: "/app",
@@ -73,5 +71,9 @@ export const router = createBrowserRouter([
       { path: "reports", element: <ReportsPage /> },
       { path: "settings", element: <SettingsPage /> },
     ],
+  },
+  {
+    path: "*",
+    element: <Navigate to="/" replace />,
   },
 ]);
