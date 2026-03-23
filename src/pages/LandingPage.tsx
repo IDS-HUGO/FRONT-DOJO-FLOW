@@ -1,87 +1,54 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/landing.css";
+import "../styles/landing-new.css";
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const [showPricingModal, setShowPricingModal] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
 
-  const handleContactClick = () => {
-    window.location.href =
-      "mailto:hugofranciscoluisinclan@gmail.com?subject=Solicitud de Acceso a Dojo-Flow&body=Hola,%0Aestoy interesado en acceder a Dojo-Flow para gestionar mi dojo.%0AGracias.";
+  const handleSelectPlan = (planId: number) => {
+    setSelectedPlan(planId);
+    setShowPricingModal(true);
+    window.scrollTo(0, 0);
   };
-
-  const images = [
-    { id: 1, title: "Dashboard Principal", emoji: "📊" },
-    { id: 2, title: "Gestión de Estudiantes", emoji: "👥" },
-    { id: 3, title: "Reportes Avanzados", emoji: "📈" },
-    { id: 4, title: "Pagos Automatizados", emoji: "💳" },
-    { id: 5, title: "Horarios Inteligentes", emoji: "📅" },
-    { id: 6, title: "Análisis en Tiempo Real", emoji: "⚡" },
-  ];
-
-  const testimonials = [
-    {
-      name: "Carlos Martínez",
-      role: "Dojo Sensei - Madrid",
-      text: "Dojo-Flow transformó la manera en que gestiono mi academia. Ahora puedo enfocarse en enseñanza, no en administración.",
-      avatar: "🥋",
-    },
-    {
-      name: "María García",
-      role: "Propietaria - Barcelona",
-      text: "El sistema de pagos automatizado me ahorró 15 horas semanales. ¡Increíble inversión para mi negocio!",
-      avatar: "👩‍🏫",
-    },
-    {
-      name: "Juan López",
-      role: "Director - Valencia",
-      text: "Mis estudiantes y padres aman el portal. La experiencia de usuario es inmejorable.",
-      avatar: "👨‍💼",
-    },
-  ];
 
   const plans = [
     {
-      name: "STARTER",
-      price: "29",
-      description: "Perfecto para dojos nuevos",
-      features: ["Hasta 50 estudiantes", "Gestión básica", "Reportes simples", "Email support"],
-      cta: "Comenzar",
+      id: 0,
+      name: "Plan Blanco",
+      price: "0",
+      description: "Para validar",
+      features: ["Hasta 10 estudiantes", "Gestión básica"],
+      cta: "Comenzar gratis",
+      highlighted: false,
     },
     {
-      name: "PROFESIONAL",
-      price: "79",
-      description: "La opción favorita",
-      features: ["Hasta 500 estudiantes", "Control completo", "Reportes avanzados", "Soporte prioritario", "API access"],
-      cta: "Más Popular",
+      id: 1,
+      name: "Plan Negro",
+      price: "520",
+      description: "Profesional",
+      features: ["Estudiantes ilimitados", "Control completo", "Exámenes y grados"],
+      cta: "Comprar ahora",
       highlighted: true,
     },
     {
-      name: "ENTERPRISE",
-      price: "Custom",
-      description: "Solución empresarial",
-      features: ["Estudiantes ilimitados", "Integraciones custom", "Análisis AI", "Dedicado 24/7", "SLA guarantee"],
-      cta: "Contactar",
+      id: 2,
+      name: "Plan Maestro",
+      price: "870",
+      description: "Empresarial",
+      features: ["Todo Plan Negro", "Marketing automatizado", "Soporte prioritario"],
+      cta: "Comprar ahora",
+      highlighted: false,
     },
   ];
 
   return (
     <div className="landing-container">
-      {/* Animated Background */}
-      <div className="landing-bg">
-        <div className="floating-gradient floating-gradient-1"></div>
-        <div className="floating-gradient floating-gradient-2"></div>
-        <div className="floating-gradient floating-gradient-3"></div>
-        <div className="grid-bg"></div>
-      </div>
-
-      {/* Navigation Bar */}
+      {/* Navigation */}
       <nav className="landing-nav">
         <div className="nav-brand">
-          <img src="/logos/LOGO.jpeg" alt="Dojo-Flow Logo" className="logo-image" />
-          <span className="logo-text">DOJO</span>
-          <span className="logo-flow">FLOW</span>
+          <span className="logo-text">DojoFlow</span>
         </div>
         <div className="nav-right">
           <button onClick={() => navigate("/login")} className="nav-login-btn">
@@ -93,168 +60,311 @@ export const LandingPage: React.FC = () => {
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
-          <div className="hero-badge">
-            <span className="badge-icon">⚡</span>
-            <span>Nº 1 en Gestión de Dojos en Latinoamérica</span>
-          </div>
-
           <h1 className="hero-title">
-            <span className="text-gradient">Tu Dojo Merece</span>
-            <br />
-            <span className="text-glow">Una Plataforma de Nivel Mundial</span>
+            Profesionaliza tu Academia <br /> de Artes Marciales
           </h1>
-
           <p className="hero-subtitle">
-            La solución integral que transformará tu centro de artes marciales en un negocio altamente productivo y automatizado.
+            Automatiza pagos, controla asistencias, sigue el progreso de tus estudiantes y crece tu negocio.
           </p>
 
-          {/* Feature Pills */}
-          <div className="feature-pills">
-            <div className="pill">
-              <span className="pill-icon">🎯</span>
-              <span>Fácil de usar</span>
-            </div>
-            <div className="pill">
-              <span className="pill-icon">⚡</span>
-              <span>Automatización total</span>
-            </div>
-            <div className="pill">
-              <span className="pill-icon">📱</span>
-              <span>Mobile first</span>
-            </div>
-          </div>
-
-          {/* CTA Buttons - MEJORADOS */}
           <div className="cta-buttons">
-            <button onClick={handleContactClick} className="btn btn-primary btn-large">
-              <span className="btn-glow"></span>
-              <span className="btn-text">🚀 Solicitar Acceso</span>
+            <button onClick={() => handleSelectPlan(1)} className="btn btn-primary btn-large">
+              Comienza ahora
             </button>
-
-            <button onClick={handleContactClick} className="btn btn-secondary btn-large">
-              <span className="btn-text">Agendar Demo</span>
+            <button onClick={() => navigate("/login")} className="btn btn-secondary btn-large">
+              Ya tengo cuenta
             </button>
           </div>
 
-          {/* Trust Badges */}
           <div className="trust-indicators">
             <div className="indicator">
-              <span className="check-icon">✓</span>
-              <span>Prueba 14 días gratis</span>
+              <span>✓ Prueba sin tarjeta</span>
             </div>
             <div className="indicator">
-              <span className="check-icon">✓</span>
-              <span>No requiere tarjeta</span>
+              <span>✓ Cancelar cuando quieras</span>
             </div>
             <div className="indicator">
-              <span className="check-icon">✓</span>
-              <span>Soporte 24/7</span>
+              <span>✓ Soporte 24/7</span>
             </div>
-          </div>
-        </div>
-
-        {/* Decorative Elements */}
-        <div className="hero-decoration">
-          <div className="orbiting-sphere sphere-1"></div>
-          <div className="orbiting-sphere sphere-2"></div>
-          <div className="orbiting-sphere sphere-3"></div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="stats-section">
-        <div className="stats-grid">
-          <div className="stat-card">
-            <h3>10,000+</h3>
-            <p>Dojos confían en nosotros</p>
-          </div>
-          <div className="stat-card">
-            <h3>500K+</h3>
-            <p>Estudiantes gestionados</p>
-          </div>
-          <div className="stat-card">
-            <h3>$50M+</h3>
-            <p>En pagos procesados</p>
-          </div>
-          <div className="stat-card">
-            <h3>4.9★</h3>
-            <p>Rating en reviews</p>
           </div>
         </div>
       </section>
 
-      {/* Gallery Section */}
-      <section className="gallery-section" id="gallery">
+      {/* What We Offer */}
+      <section className="features-section">
         <div className="section-container">
-          <h2 className="section-title">Interfaz Intuitiva y Potente</h2>
-          <p className="section-subtitle">Diseñada para que gestiones tu dojo en minutos, no en horas</p>
+          <h2>Lo que ofrecemos</h2>
+          <div className="features-grid">
+            <div className="feature-card">
+              <div className="feature-icon">📊</div>
+              <h3>Software Administrativo</h3>
+              <p>Control de asistencias, exámenes y seguimiento de grados en tu dojo</p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon">💳</div>
+              <h3>Pagos Automáticos</h3>
+              <p>Procesa cobros recurrentes sin fricción, reduce la morosidad</p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon">📱</div>
+              <h3>App para Alumnos</h3>
+              <p>Tus estudiantes ven su progreso y motivación en tiempo real</p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon">🛍️</div>
+              <h3>Marketplace</h3>
+              <p>Vende equipo oficial (uniformes, protecciones) desde la plataforma</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-          <div className="gallery-grid">
-            {images.map((image) => (
-              <div
-                key={image.id}
-                className="gallery-item"
-                onClick={() => setSelectedImage(image.id)}
-                style={{ cursor: "pointer" }}
-              >
-                <div className="gallery-placeholder">
-                  <div className="gallery-emoji">{image.emoji}</div>
+      {/* The Problem We Solve */}
+      <section className="problem-section">
+        <div className="section-container">
+          <h2>El problema</h2>
+          <p className="section-subtitle">Tres desafíos que enfrentas hoy</p>
+          <div className="problems-grid">
+            <div className="problem-card">
+              <h3>Fricción en cobros</h3>
+              <p>Cobrar manualmente, perseguir pagos, Excel y transferencias. Tiempo que no tienes.</p>
+            </div>
+            <div className="problem-card">
+              <h3>Alta deserción</h3>
+              <p>Los estudiantes se van sin avisar. Sin forma de saber quién está realmente comprometido.</p>
+            </div>
+            <div className="problem-card">
+              <h3>Desorden administrativo</h3>
+              <p>Registros dispersos, archivos perdidos, información de alumnos desordenada.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section className="pricing-section">
+        <div className="section-container">
+          <h2>Planes claros y justos</h2>
+          <p className="section-subtitle">Elige el plan que se ajuste a tu crecimiento</p>
+          <div className="pricing-grid">
+            {plans.map((plan) => (
+              <div key={plan.id} className={`pricing-card ${plan.highlighted ? "highlighted" : ""}`}>
+                {plan.highlighted && <div className="popular-badge">MÁS POPULAR</div>}
+                <div className="plan-header">
+                  <h3>{plan.name}</h3>
+                  <p className="plan-description">{plan.description}</p>
                 </div>
-                <h4 className="gallery-title">{image.title}</h4>
+                <div className="plan-price-box">
+                  <span className="plan-price">${plan.price}</span>
+                  <span className="plan-freq">MXN/mes</span>
+                </div>
+                <ul className="plan-features">
+                  {plan.features.map((feature, idx) => (
+                    <li key={idx}>✓ {feature}</li>
+                  ))}
+                </ul>
+                <button
+                  className={`btn btn-${plan.highlighted ? "primary" : "secondary"} btn-full`}
+                  onClick={() => handleSelectPlan(plan.id)}
+                >
+                  {plan.cta}
+                </button>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="features-section">
-        <div className="section-container">
-          <h2 className="section-title">Potencia Tu Negocio</h2>
-          <p className="section-subtitle">Herramientas profesionales para crecer sin límites</p>
-
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon">👥</div>
-              <h3>Gestión Completa</h3>
-              <p>Registra, monitorea y gestiona todos los aspectos de tus estudiantes en un solo lugar centralizado</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon">💳</div>
-              <h3>Pagos Automatizados</h3>
-              <p>Procesa pagos automáticos, genera reportes y mantén tu flujo de caja bajo control total</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon">📅</div>
-              <h3>Horarios Inteligentes</h3>
-              <p>Crea y actualiza horarios dinámicamente, asigna instructores sin conflictos de disponibilidad</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon">🎓</div>
-              <h3>Progreso de Belts</h3>
-              <p>Registro digital de exámenes, calificaciones y seguimiento de cinturones automático</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon">📊</div>
-              <h3>Análisis Profundo</h3>
-              <p>Obtén insights detallados sobre ingresos, asistencia, desempeño y tendencias de negocio</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon">🔐</div>
-              <h3>Seguridad Garantizada</h3>
-              <p>Encriptación bancaria de nivel empresarial protege todos tus datos sensibles 24/7</p>
-            </div>
+      {/* Footer */}
+      <footer className="landing-footer">
+        <div className="footer-content">
+          <div className="footer-section">
+            <h4>DojoFlow</h4>
+            <p>El aliado tecnológico de tu academia de artes marciales</p>
+          </div>
+          <div className="footer-section">
+            <h4>Producto</h4>
+            <ul>
+              <li><a href="#pricing">Precios</a></li>
+              <li><a href="/login">Ingresar</a></li>
+            </ul>
+          </div>
+          <div className="footer-section">
+            <h4>Legal</h4>
+            <ul>
+              <li><a href="#">Términos</a></li>
+              <li><a href="#">Privacidad</a></li>
+            </ul>
           </div>
         </div>
-      </section>
+        <div className="footer-bottom">
+          <p>&copy; 2026 DojoFlow. Profesionaliza tu academia. 🥋</p>
+        </div>
+      </footer>
 
-      {/* Testimonials Section */}
-      <section className="testimonials-section">
+      {/* Purchase Modal */}
+      {showPricingModal && (
+        <div className="modal-overlay" onClick={() => setShowPricingModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setShowPricingModal(false)}>×</button>
+            <PurchaseForm planId={selectedPlan} onClose={() => setShowPricingModal(false)} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+interface PurchaseFormProps {
+  planId: number | null;
+  onClose: () => void;
+}
+
+const PurchaseForm: React.FC<PurchaseFormProps> = ({ planId, onClose }) => {
+  const [formData, setFormData] = useState({
+    dojo_name: "",
+    owner_name: "",
+    owner_email: "",
+    owner_phone: "",
+    city: "",
+    timezone: "America/Mexico_City",
+    currency: "MXN",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          plan_id: planId,
+          ...formData,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al crear la orden");
+      }
+
+      const order = await response.json();
+      setMessage(`✓ Orden creada. ID: ${order.id}. Redirigiendo al pago...`);
+
+      // Simulate redirect to payment
+      setTimeout(() => {
+        // In production, redirect to Stripe checkout
+        alert(`En producción, aquí irías a Stripe.\nCredenciales temporales:\nEmail: ${order.generated_email}\nPassword: [será generada después del pago]`);
+        onClose();
+      }, 2000);
+    } catch (error) {
+      setMessage(`Error: ${error instanceof Error ? error.message : "Inténtalo de nuevo"}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form className="purchase-form" onSubmit={handleSubmit}>
+      <h2>Completa tu información</h2>
+
+      <div className="form-group">
+        <label>Nombre del Dojo *</label>
+        <input
+          type="text"
+          name="dojo_name"
+          value={formData.dojo_name}
+          onChange={handleChange}
+          placeholder="Ej: Dojo Dragon Rojo"
+          required
+        />
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
+          <label>Nombre del Dueño *</label>
+          <input
+            type="text"
+            name="owner_name"
+            value={formData.owner_name}
+            onChange={handleChange}
+            placeholder="Tu nombre"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Email *</label>
+          <input
+            type="email"
+            name="owner_email"
+            value={formData.owner_email}
+            onChange={handleChange}
+            placeholder="tu@email.com"
+            required
+          />
+        </div>
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
+          <label>Teléfono *</label>
+          <input
+            type="tel"
+            name="owner_phone"
+            value={formData.owner_phone}
+            onChange={handleChange}
+            placeholder="+52 555 000 0000"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Ciudad *</label>
+          <input
+            type="text"
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            placeholder="Ciudad de México"
+            required
+          />
+        </div>
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
+          <label>Zona Horaria</label>
+          <select name="timezone" value={formData.timezone} onChange={handleChange}>
+            <option value="America/Mexico_City">México Central</option>
+            <option value="America/Chicago">Noreste</option>
+            <option value="America/Denver">Noroeste</option>
+          </select>
+        </div>
+      </div>
+
+      {message && (
+        <div className={`form-message ${message.startsWith("✓") ? "success" : "error"}`}>
+          {message}
+        </div>
+      )}
+
+      <button type="submit" disabled={loading} className="btn btn-primary btn-full">
+        {loading ? "Procesando..." : "Proceder al pago"}
+      </button>
+    </form>
+  );
+};
         <div className="section-container">
           <h2 className="section-title">Lo que Dicen Nuestros Clientes</h2>
           <p className="section-subtitle">Miles de propietarios de dojos ya están transformando sus negocios</p>
