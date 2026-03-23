@@ -331,6 +331,107 @@ a {
   margin-top: 0.2rem;
 }
 
+.dashboard-pulse,
+.report-insight-banner,
+.report-secondary-grid,
+.dashboard-extended-grid {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.dashboard-pulse,
+.report-insight-banner {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 1rem 1.1rem;
+  border-radius: 1.2rem;
+}
+
+.dashboard-pulse-item,
+.report-secondary-card,
+.dashboard-extended-card {
+  padding: 1rem 1.05rem;
+  border-radius: 1rem;
+}
+
+.dashboard-pulse-item strong,
+.dashboard-extended-card strong,
+.report-secondary-card strong,
+.report-insight-banner strong {
+  display: block;
+  color: var(--navy-deep);
+  font-size: 1.45rem;
+  margin-top: 0.25rem;
+}
+
+.dashboard-pulse-item small,
+.dashboard-extended-card p,
+.report-secondary-card p {
+  display: block;
+  color: var(--muted);
+  margin: 0.25rem 0 0;
+}
+
+.dashboard-extended-grid,
+.report-secondary-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.dashboard-extended-card {
+  min-height: 140px;
+}
+
+.commercial-strip {
+  padding: 0 0 1rem;
+}
+
+.commercial-strip-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.2rem 1.4rem;
+  border-radius: 1.2rem;
+}
+
+.commercial-strip-inner strong {
+  display: block;
+  color: var(--navy-deep);
+  font-size: 1.2rem;
+  margin-top: 0.25rem;
+}
+
+.landing-proof-band {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1rem 1.15rem;
+  margin: 1.5rem auto 0;
+  max-width: 840px;
+  border-radius: 1.2rem;
+}
+
+.landing-proof-band div {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(44, 41, 115, 0.08);
+  border-radius: 1rem;
+  padding: 0.95rem 1rem;
+  text-align: left;
+}
+
+.landing-proof-band strong {
+  display: block;
+  font-size: 1.4rem;
+  color: var(--navy-deep);
+}
+
+.landing-proof-band span {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 .executive-label {
   display: inline-block;
   font-size: 0.7rem;
@@ -398,6 +499,14 @@ a {
   padding: 1.2rem 1.25rem;
   border-radius: 1.2rem;
   min-height: 380px;
+}
+
+.report-secondary-grid {
+  margin-top: 0.25rem;
+}
+
+.report-insight-banner {
+  margin-bottom: 1rem;
 }
 
 .section-headline {
@@ -946,5 +1055,18 @@ textarea,
   .settings-rail,
   .report-chart-grid {
     grid-template-columns: 1fr;
+  }
+
+  .dashboard-pulse,
+  .report-insight-banner,
+  .dashboard-extended-grid,
+  .report-secondary-grid,
+  .landing-proof-band {
+    grid-template-columns: 1fr;
+  }
+
+  .commercial-strip-inner {
+    flex-direction: column;
+    align-items: stretch;
   }
 }

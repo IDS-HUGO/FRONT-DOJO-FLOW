@@ -50,6 +50,24 @@ export function DashboardPage() {
         subtitle="Monitorea ingresos, retención y rendimiento de tu academia en tiempo real."
       />
 
+      <div className="dashboard-pulse surface-glass">
+        <div className="dashboard-pulse-item">
+          <span className="executive-label">Ingresos estimados</span>
+          <strong>${kpi?.mrr?.toLocaleString("es-MX") ?? "0"}</strong>
+          <small>Liquidez mensual del negocio</small>
+        </div>
+        <div className="dashboard-pulse-item">
+          <span className="executive-label">Retención</span>
+          <strong>{(100 - (kpi?.churn_rate ?? 0)).toFixed(0)}%</strong>
+          <small>Base activa comprometida</small>
+        </div>
+        <div className="dashboard-pulse-item">
+          <span className="executive-label">Actividad operativa</span>
+          <strong>{kpi?.attendance_this_month ?? 0}</strong>
+          <small>Asistencias registradas este mes</small>
+        </div>
+      </div>
+
       <div className="executive-strip surface-glass">
         <div>
           <span className="executive-label">Visión general</span>
@@ -69,6 +87,24 @@ export function DashboardPage() {
         {cards.map((card) => (
           <StatCard key={card.title} title={card.title} value={card.value} />
         ))}
+      </div>
+
+      <div className="dashboard-extended-grid">
+        <div className="dashboard-extended-card surface-glass">
+          <span className="executive-label">Promedio por alumno</span>
+          <strong>${Math.round((kpi?.mrr ?? 0) / Math.max(kpi?.active_students ?? 1, 1)).toLocaleString("es-MX")}</strong>
+          <p>Lectura rápida del ticket promedio mensual.</p>
+        </div>
+        <div className="dashboard-extended-card surface-glass">
+          <span className="executive-label">Take-rate</span>
+          <strong>${kpi?.take_rate_volume?.toLocaleString("es-MX") ?? "0"}</strong>
+          <p>Volumen monetizable sobre la operación total.</p>
+        </div>
+        <div className="dashboard-extended-card surface-glass">
+          <span className="executive-label">NPS</span>
+          <strong>{kpi?.nps ?? 0}</strong>
+          <p>Percepción del servicio y probabilidad de recomendación.</p>
+        </div>
       </div>
 
       <div className="card executive-chart surface-glass">

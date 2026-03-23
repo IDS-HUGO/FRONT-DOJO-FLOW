@@ -71,6 +71,21 @@ export function ReportsPage() {
     <div className="page page-shell">
       <PageHeader title="Reportes y Análisis" subtitle="Análisis detallado del rendimiento de tu academia" />
 
+      <div className="report-insight-banner surface-glass">
+        <div>
+          <span className="executive-label">Clase líder</span>
+          <strong>{summary.top_class_by_attendance || "Sin datos"}</strong>
+        </div>
+        <div>
+          <span className="executive-label">Promedio por clase</span>
+          <strong>{summary.average_attendance_per_class.toFixed(1)}</strong>
+        </div>
+        <div>
+          <span className="executive-label">Pagos confirmados</span>
+          <strong>{summary.paid_payments}</strong>
+        </div>
+      </div>
+
       <div className="executive-strip surface-glass">
         <div>
           <span className="executive-label">Revenue</span>
@@ -128,6 +143,24 @@ export function ReportsPage() {
           <div className="report-kpi-value">
             {summary.attendance_rate.toFixed(1)}%
           </div>
+        </div>
+      </div>
+
+      <div className="report-secondary-grid">
+        <div className="report-secondary-card surface-glass">
+          <span className="executive-label">Alumnos inactivos</span>
+          <strong>{summary.inactive_students}</strong>
+          <p>Base en riesgo o desactivada que requiere seguimiento.</p>
+        </div>
+        <div className="report-secondary-card surface-glass">
+          <span className="executive-label">Pagos al día</span>
+          <strong>{summary.paid_payments}</strong>
+          <p>Ingresos conciliados y listos para operar.</p>
+        </div>
+        <div className="report-secondary-card surface-glass">
+          <span className="executive-label">Retención académica</span>
+          <strong>{summary.attendance_rate.toFixed(1)}%</strong>
+          <p>Señal de compromiso y salud del dojo.</p>
         </div>
       </div>
 

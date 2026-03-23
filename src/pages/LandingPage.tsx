@@ -110,6 +110,21 @@ export const LandingPage: React.FC = () => {
               <span>✓ Soporte 24/7</span>
             </div>
           </div>
+
+          <div className="landing-proof-band surface-glass">
+            <div>
+              <strong>+120</strong>
+              <span>dojos listos para escalar</span>
+            </div>
+            <div>
+              <strong>MXN</strong>
+              <span>cobranza y control local</span>
+            </div>
+            <div>
+              <strong>Enterprise</strong>
+              <span>paneles para operación seria</span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -195,6 +210,18 @@ export const LandingPage: React.FC = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="commercial-strip">
+        <div className="section-container commercial-strip-inner surface-glass">
+          <div>
+            <span className="executive-label">Operación completa</span>
+            <strong>Pagos, alumnos, instructores y reportes en un solo panel</strong>
+          </div>
+          <button onClick={() => handleSelectPlan(1)} className="btn btn-primary btn-large">
+            Quiero ver mi dojo así
+          </button>
         </div>
       </section>
 
