@@ -9,7 +9,7 @@ interface DataTableProps {
 
 export function DataTable({ headers, rows, caption, emptyMessage = "No hay registros todavía." }: DataTableProps) {
   return (
-    <div className="card">
+    <div className="card table-shell surface-glass">
       {caption && <p className="table-caption">{caption}</p>}
       <table className="table">
         <thead>

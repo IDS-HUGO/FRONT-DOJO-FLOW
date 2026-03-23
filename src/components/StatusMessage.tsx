@@ -4,5 +4,5 @@ interface StatusMessageProps {
 }
 
 export function StatusMessage({ type = "info", message }: StatusMessageProps) {
-  return <p className={`status-message ${type}`}>{message}</p>;
+  return <p className={`status-message status-message-${type} surface-glass`}>{message}</p>;
 }
