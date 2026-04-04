@@ -318,8 +318,8 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ planId, onClose }) => {
 
       // Simulate redirect to payment
       setTimeout(() => {
-        // In production, redirect to Stripe checkout
-        alert(`En producción, aquí irías a Stripe.\nCredenciales temporales:\nEmail: ${order.generated_email}\nPassword: [será generada después del pago]`);
+        // In production, redirect to PayPal checkout
+        alert(`En producción, aquí irías a PayPal.\nCredenciales temporales:\nEmail: ${order.generated_email}\nPassword: [será generada después del pago]`);
         onClose();
       }, 2000);
     } catch (error) {

@@ -5,21 +5,34 @@ import { AttendancePage } from "../pages/AttendancePage";
 import { BeltsPage } from "../pages/BeltsPage";
 import { CouponsPage } from "../pages/CouponsPage";
 import { DashboardPage } from "../pages/DashboardPage";
+import { ForgotPasswordPage } from "../pages/ForgotPasswordPage";
 import { LandingPage } from "../pages/LandingPage";
 import { LoginPage } from "../pages/LoginPage";
 import { MarketplacePage } from "../pages/MarketplacePage";
 import { PaymentsPage } from "../pages/PaymentsPage";
 import { PlansPage } from "../pages/PlansPage";
 import { ReportsPage } from "../pages/ReportsPage";
+import { ResetPasswordPage } from "../pages/ResetPasswordPage";
 import { SchedulesPage } from "../pages/SchedulesPage";
 import { SettingsPage } from "../pages/SettingsPage";
+import { StudentPortalPage } from "../pages/StudentPortalPage";
 import { StudentsPage } from "../pages/StudentsPage";
 import { TeachersPage } from "../pages/TeachersPage";
 
 function protectedLoader() {
   const token = localStorage.getItem("dojo_token");
-  if (!token) {
+  const accountType = localStorage.getItem("dojo_account_type");
+  if (!token || accountType === "student") {
     throw new Response("Unauthorized", { status: 401 });
+  }
+  return null;
+}
+
+function studentLoader() {
+  const token = localStorage.getItem("dojo_token");
+  const accountType = localStorage.getItem("dojo_account_type");
+  if (!token || accountType !== "student") {
+    throw redirect("/student/login");
   }
   return null;
 }
@@ -43,6 +56,24 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPasswordPage />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPasswordPage />,
+  },
+  {
+    path: "/student/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/student",
+    element: <StudentPortalPage />,
+    loader: studentLoader,
+    errorElement: <Navigate to="/student/login" replace />,
   },
   {
     path: "/admin",

@@ -3,7 +3,7 @@ import { DataTable } from "../components/DataTable";
 import { PageHeader } from "../components/PageHeader";
 import { SearchFilter } from "../components/SearchFilter";
 import { api } from "../lib/api";
-import { Student } from "../types";
+import { Student, StudentCreateResponse } from "../types";
 import { useApi } from "../hooks/useApi";
 import { useForm } from "../hooks/useApi";
 import { useAlert } from "../contexts/AlertContext";
@@ -21,8 +21,12 @@ export function StudentsPage() {
     initialValues: { full_name: "", email: "", phone: "" },
     onSubmit: async (values) => {
       try {
-        await api.post("/students", values);
-        success("Alumno registrado exitosamente");
+        const { data } = await api.post<StudentCreateResponse>("/students", values);
+        if (data.credentials_email_sent) {
+          success("Alumno registrado y credenciales enviadas por Gmail");
+        } else {
+          showError("Alumno registrado, pero Gmail no logró enviar las credenciales. Revisa la configuración SMTP de Google.");
+        }
         reset();
         refetch();
       } catch {

@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { PageHeader } from "../components/PageHeader";
 import { login } from "../lib/api";
 import "../styles/landing-new.css";
@@ -20,10 +20,13 @@ export function LoginPage() {
       const response = await login(username, password);
       
       // Store user email for role checking
+      localStorage.setItem('dojo_user_email', username);
       localStorage.setItem('user_email', username);
       
       // Redirect based on role
-      if (username === 'owner@dojoflow.com') {
+      if (response.account_type === "student") {
+        navigate("/student");
+      } else if (username === 'owner@dojoflow.com') {
         navigate("/admin");
       } else {
         navigate("/app");
@@ -47,7 +50,7 @@ export function LoginPage() {
         </div>
         <PageHeader
           title="Iniciar sesión"
-          subtitle="Accede al panel administrativo de tu academia DojoFlow."
+          subtitle="Acceso para encargados e instructores del dojo."
         />
       </section>
 
@@ -64,6 +67,12 @@ export function LoginPage() {
         <button type="submit" disabled={loading}>
           {loading ? "Ingresando..." : "Entrar"}
         </button>
+        <p style={{ marginTop: "0.8rem" }}>
+          <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
+        </p>
+        <p style={{ marginTop: "0.8rem" }}>
+          ¿Eres alumno? <Link to="/student/login">Accede aquí</Link>
+        </p>
       </form>
     </main>
   );

@@ -7,6 +7,18 @@ export interface Student {
   created_at: string;
 }
 
+export interface StudentCreateResponse extends Student {
+  credentials_email_sent: boolean;
+  fallback_temporary_password?: string | null;
+}
+
+export interface LoginResponse {
+  access_token: string;
+  token_type: string;
+  account_type: "student" | "staff";
+  student_id?: number | null;
+}
+
 export interface Payment {
   id: number;
   student_id: number;
@@ -14,6 +26,37 @@ export interface Payment {
   status: "pending" | "paid" | "failed";
   payment_date: string;
   method: string;
+}
+
+export interface PayPalCheckoutResponse {
+  payment_id: number;
+  order_id: string;
+  checkout_url: string;
+}
+
+export interface Plan {
+  id: number;
+  name: string;
+  monthly_price: number;
+  description: string;
+  transaction_fee_percent: number;
+}
+
+export interface PlanCheckoutResponse {
+  subscription_payment_id: number;
+  order_id: string;
+  checkout_url: string;
+}
+
+export interface PlanSubscriptionPayment {
+  id: number;
+  user_id: number;
+  plan_id: number;
+  amount: number;
+  status: "pending" | "paid" | "failed";
+  provider: string;
+  mp_payment_id?: string | null;
+  payment_date: string;
 }
 
 export interface Attendance {

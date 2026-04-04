@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { AxiosError } from 'axios';
-import { api } from '../lib/api';
+import { api, getApiErrorMessage } from '../lib/api';
 import { useAlert } from '../contexts/AlertContext';
 
 interface UseApiOptions {
@@ -24,8 +24,7 @@ export function useApi<T>(
       const response = await api.get<T>(url);
       setData(response.data);
     } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.detail || err.message || 'Error desconocido';
+      const errorMessage = getApiErrorMessage(err, 'Error desconocido');
       setError(errorMessage);
       if (options.showAlert) {
         showError(errorMessage);
@@ -141,8 +140,7 @@ export function useMutate() {
         onSuccess?.(data);
         return data;
       } catch (err: any) {
-        const errorMessage =
-          err.response?.data?.detail || err.message || 'Error al procesar';
+        const errorMessage = getApiErrorMessage(err, 'Error al procesar');
         showError(errorMessage);
         throw err;
       } finally {
