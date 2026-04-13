@@ -2,6 +2,10 @@
 
 Panel administrativo SaaS para academias de artes marciales, diseñado con estilo minimalista y enfoque comercial.
 
+## Manual para principiantes 0
+
+- [Manual completo del frontend](MANUAL_PARA_PRINCIPIANTES_0.md)
+
 ## Ubicación del proyecto
 
 - Frontend: `D:/UNIVERSIDAD/ANALISIS FINANCIERO/Dojo-Flow`
