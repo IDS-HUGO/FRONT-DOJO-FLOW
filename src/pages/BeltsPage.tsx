@@ -21,19 +21,37 @@ export function BeltsPage() {
     }
   }, [students]);
 
-  const { values: form, loading: saving, handleChange, handleSubmit, reset } = useForm({
-    initialValues: { student_id: selectedStudentId || 0, belt_name: "Cinta Blanca", exam_score: 0 },
+  const { values: form, loading: saving, handleChange, handleSubmit, setFieldValue } = useForm({
+    initialValues: { student_id: 0, belt_name: "Cinta Blanca", exam_score: 0 },
     onSubmit: async (values) => {
       try {
         await api.post("/belts", values);
         success("Examen registrado exitosamente");
-        reset();
+        if (selectedStudentId !== null) {
+          setFieldValue("student_id", selectedStudentId);
+        }
+        setFieldValue("belt_name", "Cinta Blanca");
+        setFieldValue("exam_score", 0);
         refetchBelts();
       } catch {
         showError("Error al registrar el examen");
       }
     },
   });
+
+  useEffect(() => {
+    if (students.length === 0) {
+      return;
+    }
+
+    const nextStudentId = selectedStudentId ?? students[0].id;
+
+    if (selectedStudentId !== nextStudentId) {
+      setSelectedStudentId(nextStudentId);
+    }
+
+    setFieldValue("student_id", nextStudentId);
+  }, [students, selectedStudentId, setFieldValue]);
 
   const rows = useMemo(
     () =>
@@ -79,7 +97,11 @@ export function BeltsPage() {
           <select
             name="student_id"
             value={form.student_id}
-            onChange={handleChange}
+            onChange={(event) => {
+              const nextStudentId = Number(event.target.value);
+              setSelectedStudentId(nextStudentId);
+              setFieldValue("student_id", nextStudentId);
+            }}
             disabled={saving}
           >
             {students.map((student) => (
