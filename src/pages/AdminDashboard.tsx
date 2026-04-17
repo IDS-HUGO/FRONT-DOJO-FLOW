@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/admin-dashboard.css';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL
 
 interface Order {
   id: number;
@@ -54,7 +57,7 @@ const AdminDashboard = () => {
       setLoading(true);
       
       // Fetch stats
-      const statsRes = await fetch('http://localhost:8000/api/v1/admin/dashboard', {
+      const statsRes = await fetch(`${API_URL}/admin/dashboard`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       
@@ -63,7 +66,7 @@ const AdminDashboard = () => {
       setStats(statsData);
 
       // Fetch orders
-      const ordersRes = await fetch('http://localhost:8000/api/v1/admin/orders', {
+      const ordersRes = await fetch(`${API_URL}/admin/orders`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       

@@ -7,6 +7,7 @@ import { useApi } from "../hooks/useApi";
 import { useForm } from "../hooks/useApi";
 import { useAlert } from "../contexts/AlertContext";
 
+
 export function AttendancePage() {
   const { data: students = [], loading: studentsLoading } = useApi<Student[]>("/students");
   const { data: attendance = [], loading: attendanceLoading, refetch: refetchAttendance } = useApi<Attendance[]>("/attendance");
