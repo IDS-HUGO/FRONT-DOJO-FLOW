@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import { PageHeader } from '../components/PageHeader';
 import { useApi } from '../hooks/useApi';
+import { API_BASE_URL } from '../lib/api';
 import { Student, Schedule } from '../types';
-
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 interface AttendanceRecord {
   student_id: number;
@@ -43,7 +40,7 @@ export function TeacherAttendancePage() {
         present: attendance.get(student.id) ?? false,
       }));
 
-      const response = await fetch(`${API_URL}/attendance`, {
+      const response = await fetch(`${API_BASE_URL}/attendance`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "../contexts/AlertContext";
+import { API_BASE_URL } from "../lib/api";
 import "../styles/landing-new.css";
 import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 const PLANS = [
   {
@@ -321,7 +320,7 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ planId, onClose, onSuccess 
       }
 
       // Crear orden
-      const response = await fetch(`${API_URL}/orders`, {
+      const response = await fetch(`${API_BASE_URL}/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -351,7 +350,7 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ planId, onClose, onSuccess 
       success("Redirigiendo a PayPal...");
 
       const checkoutResponse = await fetch(
-        `${API_URL}/orders/${order.id}/checkout`,
+        `${API_BASE_URL}/orders/${order.id}/checkout`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

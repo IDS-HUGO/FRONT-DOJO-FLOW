@@ -12,6 +12,8 @@ export function useApi<T>(
   url: string,
   options: UseApiOptions = { autoFetch: true, showAlert: true }
 ) {
+  const autoFetch = options.autoFetch ?? true;
+  const showAlertEnabled = options.showAlert ?? true;
   const [data, setData] = useState<T | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,19 +28,19 @@ export function useApi<T>(
     } catch (err: any) {
       const errorMessage = getApiErrorMessage(err, 'Error desconocido');
       setError(errorMessage);
-      if (options.showAlert) {
+      if (showAlertEnabled) {
         showError(errorMessage);
       }
     } finally {
       setLoading(false);
     }
-  }, [url, options.showAlert, showError]);
+  }, [url, showAlertEnabled, showError]);
 
   useEffect(() => {
-    if (options.autoFetch) {
+    if (autoFetch) {
       void fetch();
     }
-  }, [fetch, options.autoFetch]);
+  }, [fetch, autoFetch]);
 
   const refetch = useCallback(() => void fetch(), [fetch]);
 
