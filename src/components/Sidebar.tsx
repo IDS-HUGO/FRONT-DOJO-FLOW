@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 
 const ownerLinks = [
- // ["/app", "Dashboard"],
+ ["/app", "Dashboard"],
   ["/app/students", "Alumnos"],
   ["/app/attendance", "Asistencias"],
   ["/app/payments", "Pagos"],
@@ -11,7 +11,7 @@ const ownerLinks = [
   ["/app/plans", "Planes"],
   ["/app/marketplace", "Marketplace"],
   ["/app/coupons", "Cupones"],
-  //["/app/reports", "Reportes"],
+  ["/app/reports", "Reportes"],
   ["/app/settings", "Configuración"],
 ];
 

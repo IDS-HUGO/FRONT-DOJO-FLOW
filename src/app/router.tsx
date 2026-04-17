@@ -141,7 +141,7 @@ export const router = createBrowserRouter([
     loader: ownerLoader,
     errorElement: <Navigate to="/login" replace />,
     children: [
-      { index: true, element: <Navigate to="/app/plans" replace /> },
+      { index: true, element: <DashboardPage /> },
       { path: "students", element: <StudentsPage /> },
       { path: "attendance", element: <AttendancePage /> },
       { path: "payments", element: <PaymentsPage /> },
@@ -159,4 +159,8 @@ export const router = createBrowserRouter([
     path: "*",
     element: <Navigate to="/" replace />,
   },
-]);
+], {
+  future: {
+    v7_startTransition: true,
+  } as any,
+});
