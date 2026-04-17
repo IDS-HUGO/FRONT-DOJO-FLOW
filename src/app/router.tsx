@@ -141,7 +141,7 @@ export const router = createBrowserRouter([
     loader: ownerLoader,
     errorElement: <Navigate to="/login" replace />,
     children: [
-      { index: true, element: <DashboardPage /> },
+      { index: true, element: <Navigate to="/app/plans" replace /> },
       { path: "students", element: <StudentsPage /> },
       { path: "attendance", element: <AttendancePage /> },
       { path: "payments", element: <PaymentsPage /> },
