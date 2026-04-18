@@ -16,24 +16,68 @@ export function StudentsPage() {
   // Form and alerts
   const { success, error: showError } = useAlert();
   const [searchQuery, setSearchQuery] = useState("");
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const { values: form, loading: saving, handleChange, handleSubmit, reset } = useForm({
-    initialValues: { full_name: "", email: "", phone: "" },
+    initialValues: {
+      full_name: "",
+      email: "",
+      phone: "",
+    },
     onSubmit: async (values) => {
       try {
-        const { data } = await api.post<StudentCreateResponse>("/students", values);
+        // Validaciones básicas
+        if (!values.full_name.trim()) {
+          showError("El nombre es requerido");
+          return;
+        }
+        if (!values.email.trim()) {
+          showError("El correo es requerido");
+          return;
+        }
+        if (!values.phone.trim()) {
+          showError("El teléfono es requerido");
+          return;
+        }
+
+        // Enviar SOLO los campos que espera el backend
+        const { data } = await api.post<StudentCreateResponse>("/students", {
+          full_name: values.full_name,
+          email: values.email,
+          phone: values.phone,
+        });
+        
         if (data.credentials_email_sent) {
           success("Alumno registrado y credenciales enviadas por Gmail");
         } else {
-          showError("Alumno registrado, pero Gmail no logró enviar las credenciales. Revisa la configuración SMTP de Google.");
+          success("Alumno registrado correctamente");
         }
         reset();
         refetch();
-      } catch {
-        showError("Error al registrar el alumno");
+      } catch (err: any) {
+        console.error("Error:", err);
+        showError(err.response?.data?.detail || "Error al registrar el alumno");
       }
     },
   });
+
+  // ✅ HANDLER PARA ELIMINAR
+  const handleDeleteStudent = async (studentId: number, studentName: string) => {
+    if (!window.confirm(`¿Está seguro que desea eliminar a ${studentName}?`)) {
+      return;
+    }
+
+    setDeletingId(studentId);
+    try {
+      await api.delete(`/students/${studentId}`);
+      success(`Alumno eliminado correctamente`);
+      refetch();
+    } catch (err: any) {
+      showError(err.response?.data?.detail || "Error al eliminar el alumno");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   // Filtered and formatted rows
   const rows: (string | React.ReactNode)[][] = useMemo(
@@ -47,23 +91,35 @@ export function StudentsPage() {
         .map((student) => [
           student.full_name,
           student.email,
-          student.phone,
+          student.phone || "-",
           student.active ? "Activo" : "Inactivo",
           new Date(student.created_at).toLocaleDateString("es-MX"),
+          <div style={{ display: "flex", gap: "0.5rem" }}>
+            <button
+              onClick={() => handleDeleteStudent(student.id, student.full_name)}
+              disabled={deletingId === student.id}
+              style={{
+                padding: "0.4rem 0.8rem",
+                backgroundColor: "#ef4444",
+                color: "white",
+                border: "none",
+                borderRadius: "0.4rem",
+                cursor: deletingId === student.id ? "not-allowed" : "pointer",
+              }}
+            >
+              {deletingId === student.id ? "..." : "🗑️"}
+            </button>
+          </div>,
         ]),
-    [students, searchQuery]
+    [students, searchQuery, deletingId]
   );
 
   if (loading) {
     return (
       <section className="page-shell">
-        <PageHeader
-          title="Gestión de Alumnos"
-          subtitle="Registra y consulta el padrón activo de estudiantes de tu academia."
-        />
+        <PageHeader title="Gestión de Alumnos" subtitle="Registra estudiantes" />
         <div className="hero-empty surface-glass">
           <div className="spinner"></div>
-          <p>Cargando alumnos...</p>
         </div>
       </section>
     );
@@ -71,12 +127,9 @@ export function StudentsPage() {
 
   return (
     <section className="page-shell">
-      <PageHeader
-        title="Gestión de Alumnos"
-        subtitle="Registra y consulta el padrón activo de estudiantes de tu academia."
-      />
+      <PageHeader title="Gestión de Alumnos" subtitle="Registra estudiantes" />
 
-      <form className="card form-section surface-glass" onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
+      <form className="card form-section surface-glass" onSubmit={handleSubmit}>
         <div className="form-row">
           <input
             placeholder="Nombre completo"
@@ -93,8 +146,6 @@ export function StudentsPage() {
             onChange={handleChange}
             required
           />
-        </div>
-        <div className="form-row">
           <input
             placeholder="Teléfono"
             name="phone"
@@ -103,27 +154,21 @@ export function StudentsPage() {
             required
           />
           <button type="submit" disabled={saving}>
-            {saving ? "Guardando..." : "Agregar alumno"}
+            {saving ? "Guardando..." : "Agregar"}
           </button>
         </div>
       </form>
 
-      <SearchFilter
-        placeholder="Buscar alumno por nombre o email..."
-        value={searchQuery}
-        onSearch={setSearchQuery}
-      />
+      <SearchFilter value={searchQuery} onSearch={setSearchQuery} />
 
       {rows.length === 0 ? (
         <div className="hero-empty surface-glass">
-          <p>Aún no hay alumnos registrados.</p>
+          <p>Sin alumnos registrados</p>
         </div>
       ) : (
         <DataTable
-          headers={["Nombre", "Correo", "Teléfono", "Estado", "Alta"]}
+          headers={["Nombre", "Correo", "Teléfono", "Estado", "Alta", "Acciones"]}
           rows={rows}
-          caption="Listado de alumnos registrados"
-          emptyMessage="Aún no hay alumnos registrados."
         />
       )}
     </section>

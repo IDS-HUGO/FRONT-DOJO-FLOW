@@ -2,7 +2,10 @@ export interface Student {
   id: number;
   full_name: string;
   email: string;
-  phone: string;
+  phone?: string;
+  belt_level: string;
+  status: "active" | "inactive" | "suspended";
+  academy_id: number;
   active: boolean;
   created_at: string;
 }
@@ -26,6 +29,7 @@ export interface Payment {
   status: "pending" | "paid" | "failed";
   payment_date: string;
   method: string;
+  external_id?: string;
 }
 
 export interface PayPalCheckoutResponse {
@@ -96,13 +100,15 @@ export interface MarketplaceItem {
 
 export interface AcademyProfile {
   id: number;
+  user_id: number;
   dojo_name: string;
   owner_name: string;
   contact_email: string;
-  contact_phone: string;
-  city: string;
-  timezone: string;
-  currency: string;
+  contact_phone?: string;
+  city?: string;
+  timezone?: string;
+  currency?: string;
+  created_at?: string;
 }
 
 export interface Teacher {
@@ -112,6 +118,7 @@ export interface Teacher {
   phone?: string;
   specialties?: string;
   hourly_rate: number;
+  academy_id: number;
   active: boolean;
   created_at?: string;
 }
@@ -122,10 +129,28 @@ export interface Schedule {
   day_of_week: number;
   start_time: string;
   end_time: string;
-  teacher_id?: number;
   max_students: number;
   active: boolean;
+  academy_id: number;
+  students?: Student[];
+  teachers?: Teacher[];
   created_at?: string;
+}
+
+export interface ScheduleCapacityInfo {
+  schedule_id: number;
+  class_type: string;
+  day: string;
+  time: string;
+  dojo_plan: string;
+  is_basic_plan: boolean;
+  max_capacity: number | null;
+  current_students: number;
+  available_spots: number | null;
+  is_unlimited: boolean;
+  is_full: boolean;
+  teachers_count: number;
+  teachers: Array<{ id: number; name: string }>;
 }
 
 export interface Coupon {
@@ -138,4 +163,71 @@ export interface Coupon {
   active: boolean;
   description?: string;
   created_at?: string;
+}
+
+export interface Order {
+  id: number;
+  plan_id: number;
+  dojo_name: string;
+  owner_name: string;
+  owner_email: string;
+  owner_phone: string;
+  city: string;
+  timezone: string;
+  currency: string;
+  amount: number;
+  status: "PENDING" | "PAID" | "COMPLETED" | "CANCELLED";
+  payment_method: string;
+  transaction_id?: string;
+  paid_at?: string;
+  generated_email?: string;
+  generated_password?: string;
+  credentials_sent_at?: string;
+  created_at: string;
+}
+
+export interface User {
+  id: number;
+  email: string;
+  full_name: string;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface ScheduleCreateRequest {
+  class_type: string;
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
+  active?: boolean;
+}
+
+export interface EnrollStudentRequest {
+  student_id: number;
+}
+
+export interface AssignTeacherRequest {
+  teacher_id: number;
+}
+
+export interface TeacherResponse {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string;
+  specialties?: string;
+  hourly_rate: number;
+  academy_id: number;
+  active: boolean;
+}
+
+export interface StudentResponse {
+  id: number;
+  full_name: string;
+  email: string;
+  phone?: string;
+  belt_level: string;
+  status: string;
+  academy_id: number;
+  active: boolean;
 }

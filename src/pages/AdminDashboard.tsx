@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/admin-dashboard.css';
+import { API_BASE_URL } from '../lib/api';
 
 interface Order {
   id: number;
@@ -54,7 +55,7 @@ const AdminDashboard = () => {
       setLoading(true);
       
       // Fetch stats
-      const statsRes = await fetch('http://localhost:8000/api/v1/admin/dashboard', {
+      const statsRes = await fetch(`${API_BASE_URL}/admin/dashboard`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       
@@ -63,7 +64,7 @@ const AdminDashboard = () => {
       setStats(statsData);
 
       // Fetch orders
-      const ordersRes = await fetch('http://localhost:8000/api/v1/admin/orders', {
+      const ordersRes = await fetch(`${API_BASE_URL}/admin/orders`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       

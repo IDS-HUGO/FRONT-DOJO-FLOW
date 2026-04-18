@@ -7,6 +7,7 @@ import { useApi } from "../hooks/useApi";
 import { useForm } from "../hooks/useApi";
 import { useAlert } from "../contexts/AlertContext";
 
+
 export function AttendancePage() {
   const { data: students = [], loading: studentsLoading } = useApi<Student[]>("/students");
   const { data: attendance = [], loading: attendanceLoading, refetch: refetchAttendance } = useApi<Attendance[]>("/attendance");
@@ -19,19 +20,36 @@ export function AttendancePage() {
     }
   }, [students]);
 
-  const { values: form, loading: saving, handleChange, handleSubmit, reset } = useForm({
-    initialValues: { student_id: selectedStudentId || 0, class_type: "BJJ" },
+  const { values: form, loading: saving, handleChange, handleSubmit, setFieldValue } = useForm({
+    initialValues: { student_id: 0, class_type: "BJJ" },
     onSubmit: async (values) => {
       try {
         await api.post("/attendance", values);
         success("Asistencia registrada exitosamente");
-        reset();
+        if (selectedStudentId !== null) {
+          setFieldValue("student_id", selectedStudentId);
+        }
+        setFieldValue("class_type", "BJJ");
         refetchAttendance();
       } catch {
         showError("Error al registrar la asistencia");
       }
     },
   });
+
+  useEffect(() => {
+    if (students.length === 0) {
+      return;
+    }
+
+    const nextStudentId = selectedStudentId ?? students[0].id;
+
+    if (selectedStudentId !== nextStudentId) {
+      setSelectedStudentId(nextStudentId);
+    }
+
+    setFieldValue("student_id", nextStudentId);
+  }, [students, selectedStudentId, setFieldValue]);
 
   const rows = useMemo(
     () =>
@@ -75,7 +93,11 @@ export function AttendancePage() {
           <select
             name="student_id"
             value={form.student_id}
-            onChange={handleChange}
+            onChange={(event) => {
+              const nextStudentId = Number(event.target.value);
+              setSelectedStudentId(nextStudentId);
+              setFieldValue("student_id", nextStudentId);
+            }}
             disabled={saving}
           >
             {students.map((student) => (

@@ -1,23 +1,39 @@
-import { useEffect, useMemo } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 import { PageHeader } from "../components/PageHeader";
 import { DataTable } from "../components/DataTable";
 import { api, changePassword, getApiErrorMessage } from "../lib/api";
 import { useApi, useForm } from "../hooks/useApi";
 import { useAlert } from "../contexts/AlertContext";
-import { PayPalCheckoutResponse, Payment, Student } from "../types";
+import { MarketplaceItem, Payment, Student } from "../types";
 
 export function StudentPortalPage() {
+  const navigate = useNavigate();
   const { success, error: showError, warning } = useAlert();
   const location = useLocation();
+
   const { data: student, loading: loadingStudent } = useApi<Student>("/students/me");
   const { data: payments = [], loading: loadingPayments, refetch } = useApi<Payment[]>("/payments");
+  const { data: marketplaceItems = [], loading: loadingMarketplace } = useApi<MarketplaceItem[]>("/marketplace");
 
+  const [paymentState, setPaymentState] = useState<"idle" | "loading" | "redirecting">("idle");
+
+  // =========================
+  // 🔹 CORRECCIÓN DE STATUS
+  // =========================
   const totalPaid = useMemo(
-    () => payments.filter((p) => p.status === "paid").reduce((sum, payment) => sum + payment.amount, 0),
+    () =>
+      payments
+        .filter((p) => p.status === "paid") // 🔥 antes "approved"
+        .reduce((sum, payment) => sum + payment.amount, 0),
     [payments]
   );
-  const pendingCount = useMemo(() => payments.filter((p) => p.status === "pending").length, [payments]);
+
+  const pendingCount = useMemo(
+    () => payments.filter((p) => p.status === "pending").length,
+    [payments]
+  );
 
   const rows = useMemo(
     () =>
@@ -30,27 +46,90 @@ export function StudentPortalPage() {
     [payments]
   );
 
-  const { values, loading: submitting, handleChange, handleSubmit, reset } = useForm({
+  // =========================
+  // 🔹 FORMULARIO PAGO
+  // =========================
+  const { values: paymentForm, loading: submittingPayment, handleChange: handlePaymentChange, handleSubmit: submitPayment } = useForm({
     initialValues: {
-      amount: 0,
+      amount: 520,
       description: "Mensualidad dojo",
     },
     onSubmit: async (formValues) => {
-      try {
-        const { data } = await api.post<PayPalCheckoutResponse>("/payments/checkout/paypal/me", {
-          student_id: 0,
-          amount: Number(formValues.amount),
-          description: formValues.description,
-          success_url: `${window.location.origin}/student`,
-          cancel_url: `${window.location.origin}/student`,
-        });
-        window.location.href = data.checkout_url;
-      } catch (err) {
-        showError(getApiErrorMessage(err, "No se pudo iniciar el checkout de PayPal"));
+      if (!student) {
+        showError("No se pudo identificar al alumno autenticado");
+        return;
       }
+
+      await startPayPalCheckout(Number(formValues.amount), formValues.description, student.id);
     },
   });
 
+  async function startPayPalCheckout(amount: number, description: string, studentId: number) {
+    if (!Number.isFinite(amount) || amount <= 0) {
+      showError("Ingresa un monto valido para continuar");
+      return;
+    }
+
+    try {
+      setPaymentState("loading");
+
+      const successUrl = `${window.location.origin}/student`;
+      const cancelUrl = `${window.location.origin}/student?cancel=true`;
+
+      let data: any;
+
+      try {
+        const response = await api.post("/payments/checkout/paypal/me", {
+          student_id: studentId,
+          amount,
+          description,
+          success_url: successUrl,
+          cancel_url: cancelUrl,
+        });
+        data = response.data;
+      } catch (err) {
+        // Backward compatibility for deployed APIs that do not expose /checkout/paypal/me yet.
+        if (axios.isAxiosError(err) && err.response?.status === 404) {
+          try {
+            const fallbackResponse = await api.post("/payments/checkout/paypal", {
+              student_id: studentId,
+              amount,
+              description,
+              success_url: successUrl,
+              cancel_url: cancelUrl,
+            });
+            data = fallbackResponse.data;
+          } catch (fallbackErr) {
+            if (axios.isAxiosError(fallbackErr) && fallbackErr.response?.status === 404) {
+              // Compatibility with currently deployed backend API.
+              const legacyResponse = await api.post(`/payments/checkout?amount=${amount}`);
+              data = legacyResponse.data;
+            } else {
+              throw fallbackErr;
+            }
+          }
+        } else {
+          throw err;
+        }
+      }
+
+      const checkoutUrl = data?.checkout_url ?? data?.url;
+
+      if (!checkoutUrl) {
+        throw new Error("No se recibio URL de aprobacion de PayPal");
+      }
+
+      setPaymentState("redirecting");
+      window.location.href = checkoutUrl;
+    } catch (err) {
+      setPaymentState("idle");
+      showError(getApiErrorMessage(err, "No se pudo iniciar el checkout de PayPal"));
+    }
+  }
+
+  // =========================
+  // 🔹 FORMULARIO CONTRASEÑA
+  // =========================
   const {
     values: passwordForm,
     loading: changingPassword,
@@ -68,12 +147,18 @@ export function StudentPortalPage() {
         showError("La nueva contraseña debe tener al menos 8 caracteres");
         return;
       }
+
       if (formValues.new_password !== formValues.confirm_password) {
         showError("La nueva contraseña y su confirmación no coinciden");
         return;
       }
+
       try {
-        const response = await changePassword(formValues.current_password, formValues.new_password);
+        const response = await changePassword(
+          formValues.current_password,
+          formValues.new_password
+        );
+
         success(response.message);
         resetPasswordForm();
       } catch (err) {
@@ -82,47 +167,69 @@ export function StudentPortalPage() {
     },
   });
 
+  // =========================
+  // 🔹 LOGOUT
+  // =========================
+  const handleLogout = () => {
+    localStorage.removeItem("dojo_token");
+    localStorage.removeItem("dojo_user_email");
+    localStorage.removeItem("dojo_account_type");
+    localStorage.removeItem("dojo_student_id");
+    success("Sesión cerrada correctamente");
+    navigate("/login");
+  };
+
+  // =========================
+  // 🔹 PAYPAL RETURN
+  // =========================
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const orderId = params.get("token");
-    const payerId = params.get("PayerID");
 
-    if (!orderId) {
-      return;
-    }
-
-    if (!payerId) {
-      warning("Pago cancelado por el usuario en PayPal");
-      window.history.replaceState({}, document.title, location.pathname);
-      return;
-    }
+    if (!orderId) return;
 
     const verifyPayment = async () => {
       try {
-        const { data } = await api.post<Payment>("/payments/paypal/verify", {
-          order_id: orderId,
-        });
-
-        if (data.status === "paid") {
-          success("Pago aprobado correctamente");
-        } else if (data.status === "pending") {
-          success("Pago recibido, pendiente de confirmación");
-        } else {
-          showError("Pago rechazado");
+        setPaymentState("loading");
+        try {
+          await api.post("/payments/paypal/verify", { order_id: orderId });
+        } catch (err) {
+          if (axios.isAxiosError(err) && err.response?.status === 404) {
+            await api.post(`/payments/paypal/capture?order_id=${orderId}`);
+          } else {
+            throw err;
+          }
         }
 
+        success("Pago aprobado correctamente");
         refetch();
       } catch (err) {
         showError(getApiErrorMessage(err, "No se pudo verificar el pago"));
       } finally {
+        setPaymentState("idle");
         window.history.replaceState({}, document.title, location.pathname);
       }
     };
 
-    void verifyPayment();
-  }, [location.pathname, location.search, refetch, showError, success, warning]);
+    verifyPayment();
+  }, [location.search]);
 
-  if (loadingStudent || loadingPayments) {
+  // =========================
+  // 🔹 CANCELACIÓN PAYPAL
+  // =========================
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const cancelled = params.get("cancel");
+
+    if (cancelled) {
+      warning("Pago cancelado por el usuario en PayPal");
+      window.history.replaceState({}, document.title, location.pathname);
+    }
+  }, [location.search]);
+
+  const activeMarketplaceItems = marketplaceItems.filter((item) => item.active && item.stock > 0);
+
+  if (loadingStudent || loadingPayments || loadingMarketplace) {
     return (
       <section className="page-shell">
         <PageHeader title="Portal del Alumno" subtitle="Consulta tu cuenta y realiza pagos en línea." />
@@ -138,101 +245,121 @@ export function StudentPortalPage() {
     <section className="page-shell">
       <PageHeader
         title="Portal del Alumno"
-        subtitle={`Bienvenido${student ? `, ${student.full_name}` : ""}. Aquí puedes revisar y pagar tus mensualidades.`}
+        subtitle={`Bienvenido${student ? `, ${student.full_name}` : ""}.`}
       />
 
-      <div className="grid cols-3" style={{ marginBottom: "1rem" }}>
+      <div className="grid cols-3" style={{ marginBottom: "1.5rem" }}>
         <article className="card surface-glass">
-          <h3 style={{ marginTop: 0 }}>Total pagado</h3>
-          <p className="price" style={{ marginTop: 0 }}>${totalPaid.toLocaleString("es-MX")}</p>
+          <h3>Total pagado</h3>
+          <p className="price">${totalPaid.toLocaleString("es-MX")}</p>
         </article>
+
         <article className="card surface-glass">
-          <h3 style={{ marginTop: 0 }}>Pagos pendientes</h3>
-          <p className="price" style={{ marginTop: 0 }}>{pendingCount}</p>
+          <h3>Pagos pendientes</h3>
+          <p className="price">{pendingCount}</p>
         </article>
+
         <article className="card surface-glass">
-          <h3 style={{ marginTop: 0 }}>Correo registrado</h3>
-          <p style={{ margin: 0 }}>{student?.email}</p>
+          <h3>Correo</h3>
+          <p>{student?.email}</p>
         </article>
       </div>
 
-      <form className="card form-section surface-glass" onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
-        <h3 style={{ marginTop: 0 }}>Pagar mensualidad</h3>
+      <form className="card form-section surface-glass" onSubmit={submitPayment} style={{ marginBottom: "1rem" }}>
+        <div className="section-headline" style={{ marginBottom: "0.8rem" }}>
+          <h3>Pagar mensualidad</h3>
+          <span>Checkout PayPal</span>
+        </div>
         <div className="form-row">
           <input
             type="number"
             min={1}
             step="0.01"
             name="amount"
-            value={values.amount}
-            onChange={handleChange}
-            required
-            placeholder="Monto a pagar"
-            disabled={submitting}
+            value={paymentForm.amount}
+            onChange={handlePaymentChange}
+            placeholder="Monto"
+            disabled={submittingPayment || paymentState !== "idle"}
           />
           <input
+            type="text"
             name="description"
-            value={values.description}
-            onChange={handleChange}
-            placeholder="Concepto"
-            disabled={submitting}
+            value={paymentForm.description}
+            onChange={handlePaymentChange}
+            placeholder="Descripcion del pago"
+            disabled={submittingPayment || paymentState !== "idle"}
           />
         </div>
-        <button type="submit" disabled={submitting || Number(values.amount) <= 0}>
-          {submitting ? "Procesando..." : "Pagar con PayPal"}
+        <button type="submit" disabled={submittingPayment || paymentState !== "idle" || !student}>
+          {paymentState === "loading"
+            ? "Preparando checkout..."
+            : paymentState === "redirecting"
+            ? "Redirigiendo a PayPal..."
+            : "Pagar mensualidad"}
         </button>
       </form>
 
-      <form className="card form-section surface-glass" onSubmit={submitPasswordChange} style={{ marginBottom: "1rem" }}>
-        <h3 style={{ marginTop: 0 }}>Seguridad de cuenta</h3>
-        <div className="form-row">
-          <input
-            type="password"
-            name="current_password"
-            value={passwordForm.current_password}
-            onChange={handlePasswordChange}
-            placeholder="Contraseña actual"
-            required
-            disabled={changingPassword}
-          />
-          <input
-            type="password"
-            name="new_password"
-            value={passwordForm.new_password}
-            onChange={handlePasswordChange}
-            placeholder="Nueva contraseña"
-            required
-            disabled={changingPassword}
-          />
+      <section className="card surface-glass" style={{ marginBottom: "1rem" }}>
+        <div className="section-headline" style={{ marginBottom: "0.8rem" }}>
+          <h3>Marketplace</h3>
+          <span>Compra directa con PayPal</span>
         </div>
-        <div className="form-row">
-          <input
-            type="password"
-            name="confirm_password"
-            value={passwordForm.confirm_password}
-            onChange={handlePasswordChange}
-            placeholder="Confirmar nueva contraseña"
-            required
-            disabled={changingPassword}
-          />
-          <button type="submit" disabled={changingPassword}>
-            {changingPassword ? "Actualizando..." : "Cambiar contraseña"}
-          </button>
-        </div>
-      </form>
+        {activeMarketplaceItems.length === 0 ? (
+          <p className="empty-inline">No hay productos disponibles en este momento.</p>
+        ) : (
+          <div style={{ display: "grid", gap: "0.75rem" }}>
+            {activeMarketplaceItems.map((item) => (
+              <div
+                key={item.id}
+                className="surface-glass"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: "1rem",
+                  padding: "0.9rem",
+                  borderRadius: "0.9rem",
+                }}
+              >
+                <div>
+                  <strong style={{ display: "block" }}>{item.name}</strong>
+                  <small style={{ color: "var(--muted)" }}>
+                    {item.category} · Stock: {item.stock}
+                  </small>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+                  <strong>${item.price.toLocaleString("es-MX")}</strong>
+                  <button
+                    type="button"
+                    disabled={paymentState !== "idle" || !student}
+                    onClick={() => {
+                      if (!student) {
+                        showError("No se pudo identificar al alumno autenticado");
+                        return;
+                      }
 
-      {rows.length === 0 ? (
-        <div className="hero-empty surface-glass">
-          <p>Aún no tienes pagos registrados.</p>
-        </div>
-      ) : (
-        <DataTable
-          headers={["Monto", "Estado", "Método", "Fecha"]}
-          rows={rows}
-          caption="Historial de pagos"
-          emptyMessage="Aún no tienes pagos registrados."
-        />
-      )}
+                      void startPayPalCheckout(
+                        Number(item.price),
+                        `Marketplace: ${item.name}`,
+                        student.id
+                      );
+                    }}
+                  >
+                    Comprar con PayPal
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <button onClick={handleLogout}>Cerrar sesión</button>
+
+      <DataTable
+        headers={["Monto", "Estado", "Método", "Fecha"]}
+        rows={rows}
+      />
     </section>
   );
 }

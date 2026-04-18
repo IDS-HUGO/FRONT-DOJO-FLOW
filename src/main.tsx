@@ -9,7 +9,7 @@ import "./styles.css";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AlertProvider>
-      <RouterProvider router={router} />
+      <RouterProvider router={router} future={{ v7_startTransition: true } as any} />
       <Toast />
     </AlertProvider>
   </React.StrictMode>

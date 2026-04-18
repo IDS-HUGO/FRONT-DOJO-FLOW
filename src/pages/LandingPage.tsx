@@ -1,9 +1,43 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAlert } from "../contexts/AlertContext";
+import { API_BASE_URL } from "../lib/api";
 import "../styles/landing-new.css";
+import axios from "axios";
+
+const PLANS = [
+  {
+    id: 1,
+    name: "Plan Blanco",
+    price: "0",
+    description: "Para validar",
+    features: ["Hasta 10 estudiantes", "Gestión básica"],
+    cta: "Comenzar gratis",  // ← No lleva a checkout
+    highlighted: false,
+  },
+  {
+    id: 2,
+    name: "Plan Negro",
+    price: "520",
+    description: "Profesional",
+    features: ["Estudiantes ilimitados", "Control completo", "Exámenes y grados"],
+    cta: "Comprar ahora",  // ← Lleva a checkout
+    highlighted: true,
+  },
+  {
+    id: 3,
+    name: "Plan Maestro",
+    price: "870",
+    description: "Empresarial",
+    features: ["Todo Plan Negro", "Marketing automatizado", "Soporte prioritario"],
+    cta: "Comprar ahora",  // ← Lleva a checkout
+    highlighted: false,
+  },
+];
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
+  const { success, error: showError } = useAlert();
   const [showPricingModal, setShowPricingModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
 
@@ -13,41 +47,12 @@ export const LandingPage: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
-  const plans = [
-    {
-      id: 0,
-      name: "Plan Blanco",
-      price: "0",
-      description: "Para validar",
-      features: ["Hasta 10 estudiantes", "Gestión básica"],
-      cta: "Comenzar gratis",
-      highlighted: false,
-    },
-    {
-      id: 1,
-      name: "Plan Negro",
-      price: "520",
-      description: "Profesional",
-      features: ["Estudiantes ilimitados", "Control completo", "Exámenes y grados"],
-      cta: "Comprar ahora",
-      highlighted: true,
-    },
-    {
-      id: 2,
-      name: "Plan Maestro",
-      price: "870",
-      description: "Empresarial",
-      features: ["Todo Plan Negro", "Marketing automatizado", "Soporte prioritario"],
-      cta: "Comprar ahora",
-      highlighted: false,
-    },
-  ];
-
   return (
     <div className="landing-container">
       <div className="landing-orb landing-orb-one" aria-hidden="true"></div>
       <div className="landing-orb landing-orb-two" aria-hidden="true"></div>
       <div className="landing-orb landing-orb-three" aria-hidden="true"></div>
+
       {/* Navigation */}
       <nav className="landing-nav">
         <div className="nav-brand">
@@ -185,7 +190,7 @@ export const LandingPage: React.FC = () => {
           <h2>Planes claros y justos</h2>
           <p className="section-subtitle">Elige el plan que se ajuste a tu crecimiento</p>
           <div className="pricing-grid">
-            {plans.map((plan) => (
+            {PLANS.map((plan) => (
               <div key={plan.id} className={`pricing-card ${plan.highlighted ? "highlighted" : ""}`}>
                 {plan.highlighted && <div className="popular-badge">MÁS POPULAR</div>}
                 <div className="plan-header">
@@ -260,7 +265,14 @@ export const LandingPage: React.FC = () => {
         <div className="modal-overlay" onClick={() => setShowPricingModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setShowPricingModal(false)}>×</button>
-            <PurchaseForm planId={selectedPlan} onClose={() => setShowPricingModal(false)} />
+            <PurchaseForm 
+              planId={selectedPlan} 
+              onClose={() => setShowPricingModal(false)}
+              onSuccess={() => {
+                setShowPricingModal(false);
+                success("Orden creada exitosamente. Redirigiendo a PayPal...");
+              }}
+            />
           </div>
         </div>
       )}
@@ -271,9 +283,11 @@ export const LandingPage: React.FC = () => {
 interface PurchaseFormProps {
   planId: number | null;
   onClose: () => void;
+  onSuccess: () => void;
 }
 
-const PurchaseForm: React.FC<PurchaseFormProps> = ({ planId, onClose }) => {
+const PurchaseForm: React.FC<PurchaseFormProps> = ({ planId, onClose, onSuccess }) => {
+  const { success, error: showError } = useAlert();
   const [formData, setFormData] = useState({
     dojo_name: "",
     owner_name: "",
@@ -285,7 +299,6 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ planId, onClose }) => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
@@ -297,10 +310,17 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ planId, onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setMessage("");
 
     try {
-      const response = await fetch("http://localhost:8000/api/v1/orders", {
+      // Validar campos requeridos
+      if (!formData.dojo_name || !formData.owner_name || !formData.owner_email || !formData.owner_phone || !formData.city) {
+        showError("Por favor completa todos los campos requeridos");
+        setLoading(false);
+        return;
+      }
+
+      // Crear orden
+      const response = await fetch(`${API_BASE_URL}/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -310,28 +330,65 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ planId, onClose }) => {
       });
 
       if (!response.ok) {
-        throw new Error("Error al crear la orden");
+        const error = await response.json();
+        throw new Error(error.detail || "Error al crear la orden");
       }
 
       const order = await response.json();
-      setMessage(`✓ Orden creada. ID: ${order.id}. Redirigiendo al pago...`);
 
-      // Simulate redirect to payment
+      // ✅ Plan Blanco (planId === 1) es GRATIS - NO va a PayPal
+      if (planId === 1) {
+        success(`✓ ¡Bienvenido a DojoFlow! Tu cuenta está lista para usar.`);
+        
+        setTimeout(() => {
+          window.location.href = `/orders/${order.id}`;
+        }, 1500);
+        return;
+      }
+
+      // Planes pagos (2 y 3) - ir a checkout PayPal
+      success("Redirigiendo a PayPal...");
+
+      const checkoutResponse = await fetch(
+        `${API_BASE_URL}/orders/${order.id}/checkout`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (!checkoutResponse.ok) {
+        const error = await checkoutResponse.json();
+        throw new Error(error.detail || "Error al iniciar checkout PayPal");
+      }
+
+      const checkoutData = await checkoutResponse.json();
+      onSuccess();
+
+      // Redirigir a PayPal
       setTimeout(() => {
-        // In production, redirect to PayPal checkout
-        alert(`En producción, aquí irías a PayPal.\nCredenciales temporales:\nEmail: ${order.generated_email}\nPassword: [será generada después del pago]`);
-        onClose();
-      }, 2000);
+        window.location.href = checkoutData.checkout_url;
+      }, 1500);
     } catch (error) {
-      setMessage(`Error: ${error instanceof Error ? error.message : "Inténtalo de nuevo"}`);
+      showError(error instanceof Error ? error.message : "Ocurrió un error. Inténtalo de nuevo");
     } finally {
       setLoading(false);
     }
   };
 
+  const plan = PLANS.find(p => p.id === planId);
+  // ✅ NUEVO: Determina el texto del botón según el plan
+  const isFreePlan = planId === 1;
+  const buttonText = loading 
+    ? "Procesando..." 
+    : isFreePlan 
+      ? "Comenzar Gratis" 
+      : "Proceder al Pago";
+
   return (
     <form className="purchase-form" onSubmit={handleSubmit}>
       <h2>Completa tu información</h2>
+      {plan && <p style={{ textAlign: "center", color: "#666", marginBottom: "1.5rem" }}>Plan: <strong>{plan.name}</strong> - ${plan.price} MXN/mes</p>}
 
       <div className="form-group">
         <label>Nombre del Dojo *</label>
@@ -342,6 +399,7 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ planId, onClose }) => {
           onChange={handleChange}
           placeholder="Ej: Dojo Dragon Rojo"
           required
+          disabled={loading}
         />
       </div>
 
@@ -355,6 +413,7 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ planId, onClose }) => {
             onChange={handleChange}
             placeholder="Tu nombre"
             required
+            disabled={loading}
           />
         </div>
         <div className="form-group">
@@ -366,6 +425,7 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ planId, onClose }) => {
             onChange={handleChange}
             placeholder="tu@email.com"
             required
+            disabled={loading}
           />
         </div>
       </div>
@@ -380,6 +440,7 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ planId, onClose }) => {
             onChange={handleChange}
             placeholder="+52 555 000 0000"
             required
+            disabled={loading}
           />
         </div>
         <div className="form-group">
@@ -391,6 +452,7 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ planId, onClose }) => {
             onChange={handleChange}
             placeholder="Ciudad de México"
             required
+            disabled={loading}
           />
         </div>
       </div>
@@ -398,7 +460,7 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ planId, onClose }) => {
       <div className="form-row">
         <div className="form-group">
           <label>Zona Horaria</label>
-          <select name="timezone" value={formData.timezone} onChange={handleChange}>
+          <select name="timezone" value={formData.timezone} onChange={handleChange} disabled={loading}>
             <option value="America/Mexico_City">México Central</option>
             <option value="America/Chicago">Noreste</option>
             <option value="America/Denver">Noroeste</option>
@@ -406,15 +468,15 @@ const PurchaseForm: React.FC<PurchaseFormProps> = ({ planId, onClose }) => {
         </div>
       </div>
 
-      {message && (
-        <div className={`form-message ${message.startsWith("✓") ? "success" : "error"}`}>
-          {message}
-        </div>
-      )}
-
+      {/* ✅ BOTÓN CON TEXTO DINÁMICO */}
       <button type="submit" disabled={loading} className="btn btn-primary btn-full">
-        {loading ? "Procesando..." : "Proceder al pago"}
+        {buttonText}
       </button>
+
+      {/* ✅ MENSAJE DINÁMICO SEGÚN PLAN */}
+      <p style={{ textAlign: "center", fontSize: "0.85rem", color: "#999", marginTop: "1rem" }}>
+        {isFreePlan ? "✓ Sin necesidad de tarjeta" : "✓ Serás redirigido a PayPal de forma segura"}
+      </p>
     </form>
   );
 };
